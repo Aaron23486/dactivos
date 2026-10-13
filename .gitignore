@@ -30,8 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# Variables reales de entorno; ejemplo seguro versionable
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +40,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Archivos exportados y respaldos locales
+*.sql.bak
+*.backup
+*.dump
+*.secret
+*.key
+DACTIVOS_*_SAFE_*.zip
+DACTIVOS_SCHEMA_CATALOGO_*.json
+.backup-*/
+INSTALL-*.ps1
+REMOVE-*.ps1
+README-06B*.txt
+README-07B*.txt
+*.bak
+*.bak-*

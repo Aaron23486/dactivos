@@ -35,6 +35,7 @@ The review behind this document used OWASP Top 10:2025, OWASP API Security Top 1
 - **Invitations are not atomic:** if linking the profile fails after Auth sends the email, the identity exists without access until an administrator reviews it ([ADR 0006](decisions/0006-invitations-through-an-edge-function.md)).
 - **Lists show at most 500 rows** per screen; the screens say so when a list may be partial.
 - **CSV exports are not a snapshot:** rows changed while the export pages through may appear in their new state.
+- **One low-severity advisory without a fix** (GHSA-gcqx-w48m-w2h4, prototype poisoning in `deepmerge`, every version from 4.2.0) reaches the project through the `shadcn` development tool. The app only imports a stylesheet from that package; the vulnerable code belongs to its command-line tool, which is not part of the app and never receives untrusted input. CI fails only on high or critical advisories, and Dependabot will propose the fix when one is published.
 
 ## Before deploying to a hosted Supabase project
 

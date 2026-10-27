@@ -12,7 +12,8 @@ Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semve
 - **Added** 21 integration tests against a real database for authorization, business rules, concurrency and accounts; unit and source tests reorganized by domain.
 - **Added** CI with formatting, lint, types, tests, build, integration tests, dependency audit and secret scanning, plus Dependabot ([ADR 0011](docs/decisions/0011-supply-chain-in-ci.md)).
 - **Added** requirements, architecture, ADRs, security and testing documentation, a README in English, an MIT license and a security policy.
-- **Security** Next.js 16.4.3, zod 4.6.7 and updated tooling remove every known advisory, including two critical ones in Next.js 16.4.0.
+- **Security** Next.js 16.4.3, zod 4.6.7 and updated tooling remove every advisory known at the time, including two critical ones in Next.js 16.4.0. A low-severity `deepmerge` advisory published later reaches only the `shadcn` development tool and has no fix yet ([security.md](docs/security.md#known-limitations)).
+- **Changed** dependencies after reviewing Dependabot's first proposal: React 19.3.1, supabase-js 2.118.0 (also pinned in the Edge Function), Base UI 1.9, lucide-react, `cn` and the Supabase CLI.
 - **Security** HTTP security headers with a Content Security Policy ([ADR 0009](docs/decisions/0009-content-security-policy.md)) and sign-in limits per client IP and per email ([ADR 0010](docs/decisions/0010-sign-in-throttling.md)).
 - **Fixed** the initial migration, which failed on an empty database because foreign keys were created before the keys they reference.
 - **Changed** the invitation Edge Function to `Deno.serve` with a pinned client version.

@@ -218,7 +218,7 @@ npm run check               # formatting, types, lint, tests and build in sequen
 - Invitation tokens consumed only on an explicit action; invited accounts start inactive.
 - Input validated on the server and again in the database; errors without SQL details; CSV cells protected against formulas.
 - Security headers with a Content Security Policy, `frame-ancestors 'none'` and HSTS in production.
-- No known vulnerabilities in dependencies at the time of writing; CI audits them and scans the history for secrets.
+- No known high or critical vulnerabilities in dependencies; one low-severity advisory affects a development tool and has no fix yet (see [`docs/security.md`](docs/security.md#known-limitations)). CI audits dependencies and scans the history for secrets.
 
 Details, known limitations and a deployment checklist: [`docs/security.md`](docs/security.md). To report a vulnerability, see [`SECURITY.md`](SECURITY.md).
 

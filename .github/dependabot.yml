@@ -1,0 +1,42 @@
+# Dependabot proposes updates as pull requests; none is applied on its own.
+# Each pull request runs the full CI and is reviewed before merging.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Patch and minor versions together; each major version arrives in its own pull request.
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Major versions that are done on purpose, as their own change:
+      # - the Node types follow the Node major used by the app and CI (22);
+      # - Next.js and eslint-config-next share a version and move together;
+      # - React and React DOM move together with Next.js;
+      # - TypeScript and ESLint majors depend on the rest of the toolchain supporting them.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: chore(deps)
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci(deps)

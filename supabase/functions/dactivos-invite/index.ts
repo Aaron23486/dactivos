@@ -1,13 +1,12 @@
-// DACTIVOS: desplegar exclusivamente en el mismo proyecto Supabase.
-// Requiere JWT de usuario y SERVICE_ROLE_KEY solo en el entorno de Edge Functions.
-import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
-import { createClient } from "npm:@supabase/supabase-js@2";
+// Invitation of a new account by an ADMIN. Deployed in the same Supabase project as the database;
+// requires the caller's JWT, and the service role key exists only in the Edge Functions environment.
+import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 const json = (body: Record<string, unknown>, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
     headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
   });
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ ok: false }, 405);
   const authorization = req.headers.get("authorization") ?? "";
   if (!/^Bearer\s+\S+$/i.test(authorization)) return json({ ok: false }, 401);

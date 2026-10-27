@@ -22,7 +22,12 @@ async function LoginContent({ searchParams }: LoginProps) {
   }
 
   const params = await searchParams;
-  const hasError = params.error === "credentials";
+  const errorMessage =
+    params.error === "credentials"
+      ? "No fue posible iniciar sesión. Verifica tus credenciales e inténtalo nuevamente."
+      : params.error === "throttled"
+        ? "Demasiados intentos de inicio de sesión. Espera unos minutos e inténtalo nuevamente."
+        : null;
 
   return (
     <main className="flex min-h-dvh items-center justify-center bg-background px-4 py-10">
@@ -51,12 +56,12 @@ async function LoginContent({ searchParams }: LoginProps) {
             </p>
           </div>
 
-          {hasError && (
+          {errorMessage && (
             <div
               role="alert"
               className="mb-5 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive"
             >
-              No fue posible iniciar sesión. Verifica tus credenciales e inténtalo nuevamente.
+              {errorMessage}
             </div>
           )}
 

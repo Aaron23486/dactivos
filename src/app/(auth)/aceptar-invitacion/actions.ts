@@ -10,9 +10,11 @@ export async function acceptInvitation(formData: FormData) {
 
   if (
     typeof token !== "string" ||
-    token.length < 16 || token.length > 512 ||
+    token.length < 16 ||
+    token.length > 512 ||
     !/^[A-Za-z0-9_-]+$/.test(token) ||
-    type !== "invite" || confirmed !== "yes"
+    type !== "invite" ||
+    confirmed !== "yes"
   ) {
     redirect("/login?error=invitation");
   }

@@ -17,9 +17,7 @@ async function HistoryContent({ searchParams }: HistoryPageProps) {
 
   const params = await searchParams;
   const requested = typeof params.page === "string" ? Number(params.page) : NaN;
-  const page = Number.isSafeInteger(requested) && requested > 0 && requested <= 100
-    ? requested
-    : 1;
+  const page = Number.isSafeInteger(requested) && requested > 0 && requested <= 100 ? requested : 1;
   const offset = (page - 1) * 100;
 
   const result = await loadAuditEvents(offset);

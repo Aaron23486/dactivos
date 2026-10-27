@@ -17,7 +17,18 @@ test("UI01: paleta Industrial Tech y dark permanente", () => {
 test("UI01: agrupaciones de navegación conservan todas las rutas", () => {
   const shell = read("src/components/layout/app-shell.tsx");
   const nav = read("src/lib/navigation.ts");
-  for (const route of ["dashboard", "activos", "empleados", "departamentos", "asignaciones", "mantenimiento", "historial", "reportes", "usuarios", "configuracion"]) {
+  for (const route of [
+    "dashboard",
+    "activos",
+    "empleados",
+    "departamentos",
+    "asignaciones",
+    "mantenimiento",
+    "historial",
+    "reportes",
+    "usuarios",
+    "configuracion",
+  ]) {
     assert.match(shell, new RegExp(`"/${route}"`));
     assert.match(nav, new RegExp(`href: "/${route}"`));
   }
@@ -46,7 +57,15 @@ test("UI01: acciones no pierden protección de doble envío", () => {
 });
 
 test("UI01: no cambia seguridad ni lógica del esquema", () => {
-  const files = ["src/app/globals.css", "src/app/layout.tsx", "src/components/layout/app-shell.tsx", "src/components/operations/primitives.tsx", "src/components/operations/action-form.tsx", "src/components/dashboard/dashboard-overview.tsx", "src/app/(auth)/login/page.tsx"];
+  const files = [
+    "src/app/globals.css",
+    "src/app/layout.tsx",
+    "src/components/layout/app-shell.tsx",
+    "src/components/operations/primitives.tsx",
+    "src/components/operations/action-form.tsx",
+    "src/components/dashboard/dashboard-overview.tsx",
+    "src/app/(auth)/login/page.tsx",
+  ];
   for (const name of files) {
     const text = read(name);
     assert.doesNotMatch(text, /SUPABASE_SERVICE_ROLE_KEY|auth\.admin|force-dynamic/i);

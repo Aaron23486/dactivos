@@ -1,22 +1,15 @@
-﻿import "server-only";
+import "server-only";
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import {
-  hasPermission,
-  isAppRole,
-  type AppRole,
-  type Permission,
-} from "@/lib/auth/permissions";
+import { hasPermission, isAppRole, type AppRole, type Permission } from "@/lib/auth/permissions";
 
 export type AuthorizedUser = {
   id: string;
   role: AppRole;
 };
 
-export async function requirePermission(
-  permission: Permission
-): Promise<AuthorizedUser> {
+export async function requirePermission(permission: Permission): Promise<AuthorizedUser> {
   const supabase = await createClient();
 
   const {
@@ -28,8 +21,7 @@ export async function requirePermission(
     redirect("/login");
   }
 
-  const { data: role, error: roleError } =
-    await supabase.rpc("current_app_role");
+  const { data: role, error: roleError } = await supabase.rpc("current_app_role");
 
   if (roleError || !isAppRole(role)) {
     redirect("/acceso-denegado");

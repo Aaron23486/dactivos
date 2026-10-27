@@ -12,8 +12,8 @@ const source = readFileSync(file, "utf8");
 const syntax = ts.createSourceFile(file, source, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
 
 function fn(name) {
-  return syntax.statements.find((node) =>
-    ts.isFunctionDeclaration(node) && node.name?.text === name
+  return syntax.statements.find(
+    (node) => ts.isFunctionDeclaration(node) && node.name?.text === name,
   );
 }
 
@@ -38,7 +38,7 @@ test("Configuración Instant: conexión y permiso ADMIN dentro del contenido sus
   assert.match(body, /loadAssets\(\)/);
   assert.match(body, /loadCategories\(\)/);
   assert.match(body, /loadDepartments\(\)/);
-  assert.ok(body.indexOf('await requirePermission') < body.indexOf('loadCategories()'));
+  assert.ok(body.indexOf("await requirePermission") < body.indexOf("loadCategories()"));
 });
 
 test("Configuración Instant: no lee datos antes del límite Suspense", async () => {
@@ -52,32 +52,54 @@ test("Configuración Instant: no lee datos antes del límite Suspense", async ()
       esModuleInterop: true,
     },
   });
-  const errors = result.diagnostics?.filter((d) => d.category === ts.DiagnosticCategory.Error) ?? [];
+  const errors =
+    result.diagnostics?.filter((d) => d.category === ts.DiagnosticCategory.Error) ?? [];
   assert.equal(errors.length, 0);
   const calls = [];
   const Suspense = Symbol("Suspense");
-  const jsx = (type, props) => ({type, props});
+  const jsx = (type, props) => ({ type, props });
   const mocks = {
-    "react": {Suspense},
-    "react/jsx-runtime": {jsx, jsxs: jsx},
+    react: { Suspense },
+    "react/jsx-runtime": { jsx, jsxs: jsx },
     "next/link": () => null,
-    "next/server": {connection: async () => { calls.push("connection"); }},
-    "@/lib/auth/require-permission": {requirePermission: async (key) => {calls.push("permission:" + key);}},
+    "next/server": {
+      connection: async () => {
+        calls.push("connection");
+      },
+    },
+    "@/lib/auth/require-permission": {
+      requirePermission: async (key) => {
+        calls.push("permission:" + key);
+      },
+    },
     "@/lib/operations/server-data": {
-      loadAssets: async () => {calls.push("assets");return {items: [], error:null};},
-      loadCategories: async () => {calls.push("categories");return {items: [], error:null};},
-      loadDepartments: async () => {calls.push("departments");return {items: [], error:null};},
+      loadAssets: async () => {
+        calls.push("assets");
+        return { items: [], error: null };
+      },
+      loadCategories: async () => {
+        calls.push("categories");
+        return { items: [], error: null };
+      },
+      loadDepartments: async () => {
+        calls.push("departments");
+        return { items: [], error: null };
+      },
     },
   };
-  const commonJsModule = {exports: {}};
-  runInNewContext(result.outputText, {
-    module: commonJsModule,
-    exports: commonJsModule.exports,
-    require: (name) => {
-      assert.ok(Object.hasOwn(mocks, name), `Dependencia no prevista: ${name}`);
-      return mocks[name];
+  const commonJsModule = { exports: {} };
+  runInNewContext(
+    result.outputText,
+    {
+      module: commonJsModule,
+      exports: commonJsModule.exports,
+      require: (name) => {
+        assert.ok(Object.hasOwn(mocks, name), `Dependencia no prevista: ${name}`);
+        return mocks[name];
+      },
     },
-  }, {filename: file, timeout: 1000});
+    { filename: file, timeout: 1000 },
+  );
   const rendered = commonJsModule.exports.default();
   assert.equal(rendered.type, Suspense);
   assert.deepEqual(calls, [], "Sin consultar servicios antes de Suspense");
@@ -89,10 +111,13 @@ test("Configuración Instant: no lee datos antes del límite Suspense", async ()
 });
 
 function walk(directory) {
-  return readdirSync(directory, {withFileTypes:true}).flatMap((entry) => {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = join(directory, entry.name);
-    return entry.isDirectory() ? walk(path) :
-      /(?:^|\/)(?:page|layout)\.tsx$/.test(path.replaceAll("\\", "/")) ? [path] : [];
+    return entry.isDirectory()
+      ? walk(path)
+      : /(?:^|\/)(?:page|layout)\.tsx$/.test(path.replaceAll("\\", "/"))
+        ? [path]
+        : [];
   });
 }
 
@@ -105,14 +130,20 @@ test("Auditoría: todas las rutas dejan URL/conexión en componentes suspendidos
     const code = readFileSync(route, "utf8");
     const ast = ts.createSourceFile(route, code, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
     for (const statement of ast.statements) {
-      if (!ts.isFunctionDeclaration(statement) || !statement.body ||
-          !statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.DefaultKeyword)) continue;
+      if (
+        !ts.isFunctionDeclaration(statement) ||
+        !statement.body ||
+        !statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.DefaultKeyword)
+      )
+        continue;
       const body = statement.body.getText(ast);
       if (/await\s+(?:connection\s*\(|searchParams\b)/.test(body)) {
         failures.push(route.replace(root, "") + ": dinámica en función exportada");
       }
-      if (/(?:await\s+connection\(\)|await\s+searchParams\b)/.test(code) &&
-          !code.includes("<Suspense")) {
+      if (
+        /(?:await\s+connection\(\)|await\s+searchParams\b)/.test(code) &&
+        !code.includes("<Suspense")
+      ) {
         failures.push(route.replace(root, "") + ": falta límite Suspense");
       }
     }

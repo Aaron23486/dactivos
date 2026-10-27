@@ -6,11 +6,27 @@ import { DepartmentsBoard } from "@/components/departments/departments-board";
 
 async function DepartmentsPage() {
   await connection();
-  const {role} = await requirePermission("departments.read");
+  const { role } = await requirePermission("departments.read");
   const [departments, employees] = await Promise.all([loadDepartments(), loadEmployees()]);
-  return <DepartmentsBoard role={role} departments={departments.items}
-    employees={employees.error ? null : employees.items} error={departments.error}/>;
+  return (
+    <DepartmentsBoard
+      role={role}
+      departments={departments.items}
+      employees={employees.error ? null : employees.items}
+      error={departments.error}
+    />
+  );
 }
 export default function Page() {
-  return <Suspense fallback={<p role="status" className="p-6 text-sm text-muted-foreground">Cargando departamentos...</p>}><DepartmentsPage/></Suspense>;
+  return (
+    <Suspense
+      fallback={
+        <p role="status" className="p-6 text-sm text-muted-foreground">
+          Cargando departamentos...
+        </p>
+      }
+    >
+      <DepartmentsPage />
+    </Suspense>
+  );
 }

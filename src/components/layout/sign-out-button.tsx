@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { LogOut } from "lucide-react";
 import { signOut } from "@/app/actions/auth";
@@ -7,9 +7,7 @@ type SignOutButtonProps = {
   collapsed?: boolean;
 };
 
-export function SignOutButton({
-  collapsed = false,
-}: SignOutButtonProps) {
+export function SignOutButton({ collapsed = false }: SignOutButtonProps) {
   return (
     <form action={signOut}>
       <button
@@ -24,14 +22,9 @@ export function SignOutButton({
           "focus-visible:outline-ring",
         ].join(" ")}
       >
-        <LogOut
-          className="size-4 shrink-0"
-          aria-hidden="true"
-        />
+        <LogOut className="size-4 shrink-0" aria-hidden="true" />
 
-        <span className={collapsed ? "md:sr-only" : ""}>
-          Cerrar sesión
-        </span>
+        <span className={collapsed ? "md:sr-only" : ""}>Cerrar sesión</span>
       </button>
     </form>
   );

@@ -20,16 +20,23 @@ export function loadLocalTs(relativeFile, mocks = {}) {
       esModuleInterop: true,
     },
   });
-  const errors = (diagnostics ?? []).filter(d => d.category === ts.DiagnosticCategory.Error);
-  if (errors.length) throw Error(`Error al transpilar ${relativeFile}: ${errors.map(e=>e.messageText).join("; ")}`);
+  const errors = (diagnostics ?? []).filter((d) => d.category === ts.DiagnosticCategory.Error);
+  if (errors.length)
+    throw Error(
+      `Error al transpilar ${relativeFile}: ${errors.map((e) => e.messageText).join("; ")}`,
+    );
   const exports = {};
-  const testRequire = name => {
+  const testRequire = (name) => {
     if (Object.hasOwn(mocks, name)) return mocks[name];
     if (name.startsWith("@/") || name === "server-only" || name.startsWith("next/")) {
       throw Error(`Import no simulado: ${name}`);
     }
     return requireLocal(name);
   };
-  runInNewContext(outputText, { exports, require: testRequire, module: {exports}, console, Date, Intl, process, FormData }, { filename: file, timeout: 2000 });
+  runInNewContext(
+    outputText,
+    { exports, require: testRequire, module: { exports }, console, Date, Intl, process, FormData },
+    { filename: file, timeout: 2000 },
+  );
   return exports;
 }

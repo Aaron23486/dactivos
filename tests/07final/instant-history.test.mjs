@@ -9,10 +9,12 @@ const file = resolve(process.cwd(), "src/app/(dashboard)/historial/page.tsx");
 const source = readFileSync(file, "utf8");
 const parsed = ts.createSourceFile(file, source, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
 
-function nodeText(node) { return node.getText(parsed); }
+function nodeText(node) {
+  return node.getText(parsed);
+}
 function findFunction(name) {
-  return parsed.statements.find((item) =>
-    ts.isFunctionDeclaration(item) && item.name?.text === name
+  return parsed.statements.find(
+    (item) => ts.isFunctionDeclaration(item) && item.name?.text === name,
   );
 }
 
@@ -47,49 +49,70 @@ function loadWithMocks() {
       esModuleInterop: true,
     },
   });
-  const errors = transpiled.diagnostics?.filter((d) => d.category === ts.DiagnosticCategory.Error) ?? [];
+  const errors =
+    transpiled.diagnostics?.filter((d) => d.category === ts.DiagnosticCategory.Error) ?? [];
   assert.equal(errors.length, 0, JSON.stringify(errors));
   const logs = [];
   const Suspense = Symbol("Suspense");
   const HistoryBoard = Symbol("HistoryBoard");
-  const jsx = (type, props) => ({type, props});
+  const jsx = (type, props) => ({ type, props });
   const mocks = {
-    "react": {Suspense},
-    "react/jsx-runtime": {jsx, jsxs: jsx},
-    "next/server": {connection: async () => { logs.push("connection"); }},
-    "@/lib/auth/require-permission": {requirePermission: async (permission) => {
-      logs.push(`permission:${permission}`);
-    }},
-    "@/lib/history/server-data": {loadAuditEvents: async (offset) => {
-      logs.push(`query:${offset}`);
-      return {items: [{id:"event"}], error: null};
-    }},
-    "@/components/history/history-board": {HistoryBoard},
+    react: { Suspense },
+    "react/jsx-runtime": { jsx, jsxs: jsx },
+    "next/server": {
+      connection: async () => {
+        logs.push("connection");
+      },
+    },
+    "@/lib/auth/require-permission": {
+      requirePermission: async (permission) => {
+        logs.push(`permission:${permission}`);
+      },
+    },
+    "@/lib/history/server-data": {
+      loadAuditEvents: async (offset) => {
+        logs.push(`query:${offset}`);
+        return { items: [{ id: "event" }], error: null };
+      },
+    },
+    "@/components/history/history-board": { HistoryBoard },
   };
   const commonJsModule = { exports: {} };
   const stubRequire = (name) => {
     assert.ok(Object.hasOwn(mocks, name), `import inesperado ${name}`);
     return mocks[name];
   };
-  runInNewContext(transpiled.outputText, {
-    module: commonJsModule, exports: commonJsModule.exports, require: stubRequire,
-  }, {filename: file, timeout: 1500});
+  runInNewContext(
+    transpiled.outputText,
+    {
+      module: commonJsModule,
+      exports: commonJsModule.exports,
+      require: stubRequire,
+    },
+    { filename: file, timeout: 1500 },
+  );
   return { Page: commonJsModule.exports.default, Suspense, HistoryBoard, logs };
 }
 
 test("Instant: paginación exacta y lectura diferida por cada solicitud", async () => {
   for (const [rawPage, expected] of [
-    ["1", 0], ["2", 100], ["100", 9900],
-    ["0", 0], ["101", 0], ["abc", 0],
-    [undefined, 0], [["1", "2"], 0], ["2.1", 0],
+    ["1", 0],
+    ["2", 100],
+    ["100", 9900],
+    ["0", 0],
+    ["101", 0],
+    ["abc", 0],
+    [undefined, 0],
+    [["1", "2"], 0],
+    ["2.1", 0],
   ]) {
-    const {Page, Suspense, HistoryBoard, logs} = loadWithMocks();
+    const { Page, Suspense, HistoryBoard, logs } = loadWithMocks();
     let resolved = false;
-    const promise = Promise.resolve({page: rawPage}).then((result) => {
+    const promise = Promise.resolve({ page: rawPage }).then((result) => {
       resolved = true;
       return result;
     });
-    const shell = Page({searchParams: promise});
+    const shell = Page({ searchParams: promise });
     assert.equal(shell.type, Suspense);
     assert.equal(resolved, false, "Page no espera searchParams");
     const inner = shell.props.children;

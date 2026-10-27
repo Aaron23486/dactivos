@@ -10,9 +10,7 @@ type LoginProps = {
   }>;
 };
 
-async function LoginContent({
-  searchParams,
-}: LoginProps) {
+async function LoginContent({ searchParams }: LoginProps) {
   const supabase = await createClient();
 
   const {
@@ -34,9 +32,7 @@ async function LoginContent({
             <Boxes className="size-7" aria-hidden="true" />
           </div>
 
-          <h1 className="text-3xl font-bold tracking-tight">
-            DACTIVOS
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">DACTIVOS</h1>
 
           <p className="mt-2 text-sm text-muted-foreground">
             Gestión y control de activos tecnológicos
@@ -46,13 +42,8 @@ async function LoginContent({
         <section className="industrial-panel rounded-2xl p-7 sm:p-8">
           <div className="mb-7">
             <div className="mb-2 flex items-center gap-2">
-              <LockKeyhole
-                className="size-5 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <h2 className="text-xl font-semibold">
-                Iniciar sesión
-              </h2>
+              <LockKeyhole className="size-5 text-muted-foreground" aria-hidden="true" />
+              <h2 className="text-xl font-semibold">Iniciar sesión</h2>
             </div>
 
             <p className="text-sm text-muted-foreground">
@@ -65,17 +56,13 @@ async function LoginContent({
               role="alert"
               className="mb-5 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive"
             >
-              No fue posible iniciar sesión. Verifica tus
-              credenciales e inténtalo nuevamente.
+              No fue posible iniciar sesión. Verifica tus credenciales e inténtalo nuevamente.
             </div>
           )}
 
           <form action={signIn} className="space-y-5">
             <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="text-sm font-medium"
-              >
+              <label htmlFor="email" className="text-sm font-medium">
                 Correo electrónico
               </label>
 
@@ -94,10 +81,7 @@ async function LoginContent({
             </div>
 
             <div className="space-y-2">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium"
-              >
+              <label htmlFor="password" className="text-sm font-medium">
                 Contraseña
               </label>
 
@@ -134,10 +118,7 @@ export default function LoginPage(props: LoginProps) {
     <Suspense
       fallback={
         <main className="flex min-h-dvh items-center justify-center bg-muted/40 px-4">
-          <p
-            role="status"
-            className="text-sm text-muted-foreground"
-          >
+          <p role="status" className="text-sm text-muted-foreground">
             Preparando acceso seguro...
           </p>
         </main>

@@ -13,7 +13,13 @@ async function AdminUsersContent() {
 
 export default function UsersPage() {
   return (
-    <Suspense fallback={<p role="status" className="p-6 text-sm text-muted-foreground">Consultando usuarios autorizados...</p>}>
+    <Suspense
+      fallback={
+        <p role="status" className="p-6 text-sm text-muted-foreground">
+          Consultando usuarios autorizados...
+        </p>
+      }
+    >
       <AdminUsersContent />
     </Suspense>
   );

@@ -5,30 +5,54 @@ import { loadLocalTs } from "./helpers/load-ts.mjs";
 const c = loadLocalTs("src/lib/operations/contracts.ts");
 
 test("Contratos: respuesta nula no fabrica registros", () => {
-  for (const parse of [c.parseAssets, c.parseDepartments, c.parseEmployees, c.parseAssignments, c.parseMaintenance]) {
+  for (const parse of [
+    c.parseAssets,
+    c.parseDepartments,
+    c.parseEmployees,
+    c.parseAssignments,
+    c.parseMaintenance,
+  ]) {
     assert.deepEqual(Array.from(parse(null)), []);
     assert.deepEqual(Array.from(parse({ data: [] })), []);
   }
 });
 test("Contratos: lista de activos conserva identificadores y estados reales", () => {
-  const items = c.parseAssets([{id:"a1", internal_code:"QA01", serial_number:"SN01", category_code:"HANDHELD", status:"ASSIGNED", name:"Escaner", description:null}]);
+  const items = c.parseAssets([
+    {
+      id: "a1",
+      internal_code: "QA01",
+      serial_number: "SN01",
+      category_code: "HANDHELD",
+      status: "ASSIGNED",
+      name: "Escaner",
+      description: null,
+    },
+  ]);
   assert.equal(items.length, 1);
   assert.equal(items[0].internal_code, "QA01");
   assert.equal(items[0].status, "ASSIGNED");
   assert.equal(items[0].description, null);
 });
 test("Contratos: booleanos requieren true real, no string", () => {
-  const [a,b] = c.parseDepartments([{id:"1",is_active:"true"},{id:"2",is_active:true}]);
+  const [a, b] = c.parseDepartments([
+    { id: "1", is_active: "true" },
+    { id: "2", is_active: true },
+  ]);
   assert.equal(a.is_active, false);
   assert.equal(b.is_active, true);
 });
 test("Contratos: devoluciones distinguen abiertas y cerradas", () => {
-  const [open, closed] = c.parseAssignments([{id:"1",returned_at:null},{id:"2",returned_at:"2026-10-10T10:00:00Z",return_condition:"DAMAGED"}]);
+  const [open, closed] = c.parseAssignments([
+    { id: "1", returned_at: null },
+    { id: "2", returned_at: "2026-10-10T10:00:00Z", return_condition: "DAMAGED" },
+  ]);
   assert.equal(open.returned_at, null);
   assert.equal(closed.return_condition, "DAMAGED");
 });
 test("Contratos: casos de mantenimiento conservan estado sin liberacion implicita", () => {
-  const [caseItem] = c.parseMaintenance([{id:"1",status:"RESOLVED",asset_status:"MAINTENANCE",description:"Falla de prueba"}]);
+  const [caseItem] = c.parseMaintenance([
+    { id: "1", status: "RESOLVED", asset_status: "MAINTENANCE", description: "Falla de prueba" },
+  ]);
   assert.equal(caseItem.status, "RESOLVED");
   assert.equal(caseItem.asset_status, "MAINTENANCE");
 });

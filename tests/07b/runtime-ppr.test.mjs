@@ -11,10 +11,16 @@ test("Runtime: layout difiere autenticacion hasta request con connection()", () 
   assert.match(layout, /async function DashboardContent/);
   const connection = layout.indexOf("await connection();");
   const permission = layout.indexOf('await requirePermission("dashboard.read")');
-  assert.ok(connection > 0 && permission > connection, "connection debe ejecutarse antes de Supabase Auth");
+  assert.ok(
+    connection > 0 && permission > connection,
+    "connection debe ejecutarse antes de Supabase Auth",
+  );
 });
 test("Runtime: limite Suspense sigue protegiendo DashboardContent", () => {
-  assert.match(layout, /<Suspense[\s\S]*?<DashboardContent>\{children\}<\/DashboardContent>[\s\S]*?<\/Suspense>/);
+  assert.match(
+    layout,
+    /<Suspense[\s\S]*?<DashboardContent>\{children\}<\/DashboardContent>[\s\S]*?<\/Suspense>/,
+  );
 });
 test("Runtime: Cache Components y Partial Prefetch se preservan", () => {
   assert.match(config, /cacheComponents:\s*true/);

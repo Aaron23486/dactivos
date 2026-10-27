@@ -56,3 +56,4 @@ README-06B*.txt
 README-07B*.txt
 *.bak
 *.bak-*
+supabase/.temp/

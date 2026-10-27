@@ -31,10 +31,7 @@ export const PERMISSIONS = [
 
 export type Permission = (typeof PERMISSIONS)[number];
 
-export const ROLE_PERMISSIONS: Record<
-  AppRole,
-  readonly Permission[]
-> = {
+export const ROLE_PERMISSIONS: Record<AppRole, readonly Permission[]> = {
   ADMIN: PERMISSIONS,
 
   SECURITY: [
@@ -59,16 +56,10 @@ export const ROLE_PERMISSIONS: Record<
 };
 
 export function isAppRole(value: unknown): value is AppRole {
-  return (
-    typeof value === "string" &&
-    (ROLES as readonly string[]).includes(value)
-  );
+  return typeof value === "string" && (ROLES as readonly string[]).includes(value);
 }
 
-export function hasPermission(
-  role: AppRole | null | undefined,
-  permission: Permission
-): boolean {
+export function hasPermission(role: AppRole | null | undefined, permission: Permission): boolean {
   if (!role || !isAppRole(role)) {
     return false;
   }

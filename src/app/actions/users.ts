@@ -10,10 +10,15 @@ const accessSchema = z.object({
   id: z.string().uuid(),
   role: z.enum(["ADMIN", "SECURITY"]),
   active: z.enum(["true", "false"]),
-  reason: z.string().trim().min(10).max(500).refine(
-    (value) => !/[\x00-\x1f\x7f]/.test(value),
-    "La justificación no puede contener caracteres de control",
-  ),
+  reason: z
+    .string()
+    .trim()
+    .min(10)
+    .max(500)
+    .refine(
+      (value) => !/[\x00-\x1f\x7f]/.test(value),
+      "La justificación no puede contener caracteres de control",
+    ),
   confirm: z.literal("yes"),
 });
 
@@ -28,7 +33,11 @@ export async function setUserAccess(form: FormData): Promise<OperationResult> {
     confirm: form.get("confirm"),
   });
   if (!validated.success) {
-    return { ok: false, message: "Completa el rol, estado, confirmación y una justificación válida de 10 a 500 caracteres." };
+    return {
+      ok: false,
+      message:
+        "Completa el rol, estado, confirmación y una justificación válida de 10 a 500 caracteres.",
+    };
   }
   const input = validated.data;
   if (actor.id === input.id) {
@@ -44,17 +53,37 @@ export async function setUserAccess(form: FormData): Promise<OperationResult> {
   });
   if (error) {
     console.error(`[DACTIVOS] Error administrando acceso (${error.code ?? "sin código"})`);
-    if (error.code === "42501") return {ok:false,message:"No tienes autorización para modificar cuentas."};
-    if (error.code === "23514") return {ok:false,message:"Cambio rechazado: cuenta propia, último ADMIN o correo sin confirmar. Revisa las reglas de seguridad."};
-    if (error.code === "P0002") return {ok:false,message:"El usuario no tiene perfil de acceso. Requiere vinculación mediante un procedimiento independiente."};
-    if (error.code === "22023") return {ok:false,message:"Los datos o el motivo no cumplen las reglas administrativas."};
-    if (error.code === "PGRST202" || error.code === "42883") return {ok:false,message:"No está instalada la RPC 07B-2 o su firma no coincide."};
-    return {ok:false,message:"No fue posible actualizar el acceso. Verifica el estado antes de reintentar."};
+    if (error.code === "42501")
+      return { ok: false, message: "No tienes autorización para modificar cuentas." };
+    if (error.code === "23514")
+      return {
+        ok: false,
+        message:
+          "Cambio rechazado: cuenta propia, último ADMIN o correo sin confirmar. Revisa las reglas de seguridad.",
+      };
+    if (error.code === "P0002")
+      return {
+        ok: false,
+        message:
+          "El usuario no tiene perfil de acceso. Requiere vinculación mediante un procedimiento independiente.",
+      };
+    if (error.code === "22023")
+      return { ok: false, message: "Los datos o el motivo no cumplen las reglas administrativas." };
+    if (error.code === "PGRST202" || error.code === "42883")
+      return { ok: false, message: "No está instalada la RPC 07B-2 o su firma no coincide." };
+    return {
+      ok: false,
+      message: "No fue posible actualizar el acceso. Verifica el estado antes de reintentar.",
+    };
   }
   if (typeof data !== "boolean") {
-    return {ok:false,message:"El servidor devolvió un resultado inesperado. Consulta el estado antes de reintentar."};
+    return {
+      ok: false,
+      message:
+        "El servidor devolvió un resultado inesperado. Consulta el estado antes de reintentar.",
+    };
   }
-  if (!data) return {ok:true,message:"Sin cambios en el usuario."};
+  if (!data) return { ok: true, message: "Sin cambios en el usuario." };
   revalidatePath("/usuarios");
-  return {ok:true,message:"Acceso actualizado y registrado en auditoría."};
+  return { ok: true, message: "Acceso actualizado y registrado en auditoría." };
 }

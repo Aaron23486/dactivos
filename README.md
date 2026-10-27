@@ -11,12 +11,12 @@ DACTIVOS es una aplicación web de gestión de activos para operaciones empresar
 
 ![Dashboard DACTIVOS con datos ficticios](docs/screenshots/dactivos-dashboard.png)
 
-| Inventario | Empleados |
-|:--:|:--:|
+|                          Inventario                           |                              Empleados                              |
+| :-----------------------------------------------------------: | :-----------------------------------------------------------------: |
 | ![Pantalla de activos](docs/screenshots/dactivos-activos.png) | ![Directorio de empleados](docs/screenshots/dactivos-empleados.png) |
 
-| Asignaciones | Mantenimiento |
-|:--:|:--:|
+|                              Asignaciones                              |                              Mantenimiento                               |
+| :--------------------------------------------------------------------: | :----------------------------------------------------------------------: |
 | ![Gestión de asignaciones](docs/screenshots/dactivos-asignaciones.png) | ![Gestión de mantenimiento](docs/screenshots/dactivos-mantenimiento.png) |
 
 ## Funcionalidades
@@ -32,13 +32,13 @@ DACTIVOS es una aplicación web de gestión de activos para operaciones empresar
 
 ## Arquitectura
 
-| Capa | Tecnología | Responsabilidad |
-|---|---|---|
-| Interfaz | Next.js 16 · React 19 · Tailwind CSS 4 | Pantallas, formularios y visualizaciones |
-| Aplicación | Next.js App Router · TypeScript | Acciones del servidor, autorización y reportes |
-| Identidad | Supabase Auth + SSR | Inicio/cierre de sesión y manejo de sesión |
-| Datos | PostgreSQL (Supabase) | Tablas, RLS, validaciones y RPC transaccionales |
-| Invitaciones | Supabase Edge Function | Creación segura de identidades con rol asignado |
+| Capa         | Tecnología                             | Responsabilidad                                 |
+| ------------ | -------------------------------------- | ----------------------------------------------- |
+| Interfaz     | Next.js 16 · React 19 · Tailwind CSS 4 | Pantallas, formularios y visualizaciones        |
+| Aplicación   | Next.js App Router · TypeScript        | Acciones del servidor, autorización y reportes  |
+| Identidad    | Supabase Auth + SSR                    | Inicio/cierre de sesión y manejo de sesión      |
+| Datos        | PostgreSQL (Supabase)                  | Tablas, RLS, validaciones y RPC transaccionales |
+| Invitaciones | Supabase Edge Function                 | Creación segura de identidades con rol asignado |
 
 Más información: [Arquitectura](docs/portafolio/ARQUITECTURA.md) · [Instalación](docs/portafolio/INSTALACION.md) · [Validaciones](docs/portafolio/VALIDACIONES.md).
 

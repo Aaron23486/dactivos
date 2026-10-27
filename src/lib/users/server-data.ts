@@ -13,7 +13,7 @@ export async function loadAdminUsers() {
     );
     const message =
       error.code === "PGRST202" || error.code === "42883"
-        ? "Falta instalar la RPC 07B-1 o actualizar la caché de PostgREST."
+        ? "La función de la base de datos no está instalada. Aplica las migraciones."
         : error.code === "42501"
           ? "La cuenta no tiene autorización para consultar usuarios."
           : "No se pudo consultar el directorio. Revisa el registro del servidor.";

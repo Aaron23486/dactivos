@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     if (error) {
       console.error(`[DACTIVOS] Exportación ${error.code ?? "unknown"}`);
       return Response.json(
-        { error: "Consulta fallida. Revisa las RPC 07-FINAL." },
+        { error: "No fue posible generar el reporte. Inténtalo de nuevo más tarde." },
         { status: 503 },
       );
     }

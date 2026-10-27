@@ -70,7 +70,11 @@ export async function setUserAccess(form: FormData): Promise<OperationResult> {
     if (error.code === "22023")
       return { ok: false, message: "Los datos o el motivo no cumplen las reglas administrativas." };
     if (error.code === "PGRST202" || error.code === "42883")
-      return { ok: false, message: "No está instalada la RPC 07B-2 o su firma no coincide." };
+      return {
+        ok: false,
+        message:
+          "La función de la base de datos no está instalada o su firma no coincide. Aplica las migraciones.",
+      };
     return {
       ok: false,
       message: "No fue posible actualizar el acceso. Verifica el estado antes de reintentar.",

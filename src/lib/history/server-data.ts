@@ -9,7 +9,7 @@ export async function loadAuditEvents(offset: number) {
   });
   if (error) {
     console.error(`[DACTIVOS] Audit RPC: ${error.code ?? "unknown"}`);
-    return { items: [], error: "No se pudo consultar historial. Revisa la migración 07-FINAL." };
+    return { items: [], error: "No se pudo consultar el historial. Inténtalo de nuevo más tarde." };
   }
   return { items: parseAuditEvents(data), error: null };
 }

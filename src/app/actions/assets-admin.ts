@@ -45,7 +45,10 @@ export async function changeAssetLifecycle(form: FormData): Promise<OperationRes
           "Estado incompatible, entrega vigente o mantenimiento pendiente. Actualiza la página.",
       };
     if (error.code === "PGRST202" || error.code === "42883")
-      return { ok: false, message: "Falta la migración RPC 07-FINAL." };
+      return {
+        ok: false,
+        message: "La función de la base de datos no está instalada. Aplica las migraciones.",
+      };
     return {
       ok: false,
       message: "No fue posible cambiar el estado. Revisa el inventario antes de volver a intentar.",

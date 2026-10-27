@@ -38,7 +38,7 @@ export function AdminUsersBoard({
     <main className="space-y-6">
       <header className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Administración · 07B-2
+          Administración
         </p>
         <h1 className="text-3xl font-bold tracking-tight">Usuarios del sistema</h1>
         <p className="max-w-3xl text-sm text-muted-foreground">

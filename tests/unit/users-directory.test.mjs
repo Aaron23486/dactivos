@@ -74,7 +74,7 @@ test("Seguridad: SECURITY no visualiza navegación Usuarios", () => {
   const shell = readFileSync("src/components/layout/app-shell.tsx", "utf8");
   const nav = readFileSync("src/lib/navigation.ts", "utf8");
   assert.match(nav, /href:\s*"\/usuarios"/);
-  // 07-FINAL: el menu conserva exclusiones administrativas al agregar Reportes.
+  // El menu conserva exclusiones administrativas al agregar Reportes.
   // No fijar el numero de entradas: futuras rutas ADMIN pueden añadirse.
   const adminOnlyList = shell.match(/\[([^\]]+)\]\.includes\(item\.href\)/);
   assert.ok(adminOnlyList, "Falta la lista de rutas exclusivas de ADMIN");

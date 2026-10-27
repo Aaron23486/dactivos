@@ -1,8 +1,10 @@
 # Changelog
 
-Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semver.org/); before the first release the work is grouped by stage.
+Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semver.org/); before 1.0.0 the work is grouped by stage.
 
-## [Unreleased]
+## [1.0.0] — 2026-10-27
+
+First release: the asset tracking application with its database rules, hardened and prepared so anyone can clone it, start their own local database and evaluate it with demo accounts.
 
 ### Reproducible setup, security and quality — 2026-10-27
 

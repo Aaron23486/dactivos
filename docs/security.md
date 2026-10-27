@@ -1,0 +1,47 @@
+# Security
+
+Security measures in DACTIVOS, the tests that back them, known limitations and what to check before deploying. To report a vulnerability, see [SECURITY.md](../SECURITY.md).
+
+The review behind this document used OWASP Top 10:2025, OWASP API Security Top 10:2023 and OWASP ASVS 5.0 (level 2) as references. That does not make the app certified or free of vulnerabilities.
+
+## Measures
+
+| Area                     | Measure                                                                                                                                                      | Verified by                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| Access control           | All tables closed to app users (RLS on, privileges revoked); every function checks the role first; `EXECUTE` only where needed ([ADR 0002](decisions/0002-authorization-in-the-database.md)) | `tests/integration/authorization.test.ts`                      |
+| Access control           | The web app checks permissions on every page, action and route with `requirePermission`, in addition to the database                                         | `tests/source/security-structure.test.mjs`, `tests/unit/operation-actions.test.mjs` |
+| Access control           | Deactivating an account cuts its access on the next request; no self-change; at least one active ADMIN                                                         | `tests/integration/accounts.test.ts`                           |
+| Privileged keys          | No service key in the web app or the browser; only in the Edge Function environment and terminal commands; the terminal function is executable only by `service_role` | `tests/source/security-structure.test.mjs`, `tests/integration/authorization.test.ts` |
+| Authentication           | Supabase Auth with `httpOnly` cookies; identity read with `getUser()`/`getClaims()`, never trusted from the cookie alone; no public sign-up                   | `tests/source/security-structure.test.mjs`                     |
+| Authentication           | Passwords of 12–72 characters with letters and digits, in the app and in Auth                                                                                | `supabase/config.toml`, `src/lib/auth/password-policy.ts`      |
+| Authentication           | Generic sign-in errors; 10 attempts per minute per IP and a 15-minute lock per email after 5 failures ([ADR 0010](decisions/0010-sign-in-throttling.md))      | `tests/unit/login-throttle.test.mjs`                           |
+| Invitations              | Token consumed only when the person presses the button; invited profiles start inactive ([ADR 0006](decisions/0006-invitations-through-an-edge-function.md)) | `tests/source/invitation-onboarding.test.mjs`, `tests/integration/accounts.test.ts` |
+| Input validation         | Zod on every server action; the database validates lengths, formats, categories and reasons again                                                            | `tests/unit/operation-actions.test.mjs`, `tests/integration/business-rules.test.ts` |
+| Injection                | Parameterized RPC calls only; functions run with `search_path = ''`; no dynamic SQL from user input                                                          | Code review                                                    |
+| Integrity                | Partial unique indexes, row locks and triggers keep deliveries, maintenance and releases consistent under concurrency                                         | `tests/integration/concurrency.test.ts`, `tests/integration/business-rules.test.ts` |
+| Audit                    | History written by the database in the same transaction; retirement log immutable even for the service key                                                   | `tests/integration/business-rules.test.ts`                     |
+| Error handling           | Errors mapped to Spanish messages by SQLSTATE; SQL text and stack traces never reach the browser                                                             | `tests/unit/operation-errors.test.mjs`, `tests/source/user-access.test.mjs` |
+| CSV export               | Cells starting with `=`, `+`, `-` or `@` are neutralized; ADMIN only; at most 10,000 rows, never a partial file                                               | `tests/unit/csv.test.mjs`, `tests/source/routes-and-exports.test.mjs` |
+| Browser                  | CSP, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, HSTS outside development, no `X-Powered-By` ([ADR 0009](decisions/0009-content-security-policy.md)) | `tests/unit/security-headers.test.mjs`                         |
+| Secrets                  | `.env*` ignored except `.env.example`; only public values in `.env.local`; gitleaks over the full history in CI                                              | CI `supply-chain` job                                          |
+| Dependencies             | `npm audit` (high and critical) in CI; Dependabot proposes updates for review ([ADR 0011](decisions/0011-supply-chain-in-ci.md))                              | CI `supply-chain` job                                          |
+
+## Known limitations
+
+- **The CSP allows inline scripts** because Partial Prerendering cannot carry a per-request nonce ([ADR 0009](decisions/0009-content-security-policy.md)). React's escaping and the absence of raw HTML rendering are the defenses against injected markup.
+- **Sign-in limits live in each server instance's memory** and reset on restart. The per-IP limit trusts `X-Forwarded-For`, which a client can forge when there is no proxy in front; the per-email lock always applies. Someone who knows an email can lock it for 15 minutes on purpose.
+- **A deactivated account keeps a valid Auth session** until it expires (one hour by default), but every page and function refuses it on the next request because the role is read from the database each time.
+- **Changing a password from the terminal does not end the account's open sessions.** Deactivate the account first if a session may be compromised.
+- **Invitations are not atomic:** if linking the profile fails after Auth sends the email, the identity exists without access until an administrator reviews it ([ADR 0006](decisions/0006-invitations-through-an-edge-function.md)).
+- **Lists show at most 500 rows** per screen; the screens say so when a list may be partial.
+- **CSV exports are not a snapshot:** rows changed while the export pages through may appear in their new state.
+
+## Before deploying to a hosted Supabase project
+
+1. Apply the migrations to the new project (`supabase link` and `supabase db push`); never run them on a database that already has the schema.
+2. In Authentication settings: disable sign-up, set the minimum password length to 12 with letters and digits, set the Site URL to the app's HTTPS address and allow only `<site>/aceptar-invitacion` as a redirect URL.
+3. Use the invitation template in `supabase/templates/invite.html` and a real SMTP provider.
+4. Deploy the Edge Function with JWT verification: `supabase functions deploy dactivos-invite` (never `--no-verify-jwt`).
+5. Create the first administrator from a terminal with `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SECRET_KEY` set only for that command: `npm run create-admin`.
+6. In the Next.js host, set only `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, serve over HTTPS, and make sure the proxy sets `X-Forwarded-For`.
+7. Never run `demo:setup` against the hosted project (it refuses a non-local URL).

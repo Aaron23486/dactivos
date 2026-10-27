@@ -1,6 +1,6 @@
--- DACTIVOS initial schema from exported catalog (2026-10-13).
--- CLEAN PROJECT ONLY. NEVER execute on dactivos-demo or an existing populated database.
--- No auth.users rows, user profiles, or operational/fictitious data are copied.
+-- DACTIVOS initial schema.
+-- Apply only to an empty database (npm run db:up does it locally); never to a database that already has it.
+-- It creates no Auth accounts, profiles or operational data.
 BEGIN;
 SET LOCAL search_path = public, pg_catalog;
 

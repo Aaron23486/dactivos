@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node --test",
+    "test": "node --test \"tests/unit/*.test.mjs\" \"tests/source/*.test.mjs\"",
     "check": "npm run format:check && npm run typecheck && npm run lint && npm test && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -19,7 +19,8 @@
     "env:local": "node scripts/env-local.ts",
     "demo:setup": "node scripts/demo-setup.ts",
     "create-admin": "node scripts/users.ts create --role ADMIN",
-    "users": "node scripts/users.ts"
+    "users": "node scripts/users.ts",
+    "test:integration": "node --test --test-concurrency=1 \"tests/integration/*.test.ts\""
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

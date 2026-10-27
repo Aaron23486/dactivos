@@ -35,6 +35,15 @@ test("Solo usa SDK Auth y no inserta usuarios ni cambia permisos", () => {
     const code = read(path);
     assert.doesNotMatch(code, /service_role|SUPABASE_SERVICE_ROLE_KEY|auth\.admin|\.from\(/);
   }
-  assert.match(read("docs/07FINAL-CIERRE-INVITACIONES.md"), /TokenHash/);
-  assert.match(read("docs/07FINAL-CIERRE-INVITACIONES.md"), /type=invite/);
+});
+
+test("Invitación: la plantilla de correo envía el token hash, no un enlace que lo consuma", () => {
+  const template = read("supabase/templates/invite.html");
+  assert.match(template, /\/aceptar-invitacion\?token_hash=\{\{ \.TokenHash \}\}/);
+  assert.match(template, /type=invite/);
+  assert.doesNotMatch(template, /ConfirmationURL/);
+  assert.match(
+    read("supabase/config.toml"),
+    /content_path = "\.\/supabase\/templates\/invite\.html"/,
+  );
 });

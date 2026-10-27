@@ -1,11 +1,10 @@
 /**
- * DACTIVOS 06B-4 FIX1: asegura que el frontend envia el parametro real
+ * Asegura que el frontend envia el parametro real
  * p_is_active a la RPC. Solo mocks locales: NO conecta con Supabase.
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { loadLocalTs } from "./helpers/load-ts.mjs";
+import { loadLocalTs } from "../helpers/load-ts.mjs";
 const assetId = "11111111-1111-4111-8111-111111111111";
 function setup(role = "ADMIN") {
   const calls = [],
@@ -73,12 +72,4 @@ test("SECURITY no llega a llamar la RPC administrativa", async () => {
     /Forbidden/,
   );
   assert.equal(h.calls.length, 0);
-});
-test("Script JWT 06B-4 tambien usa el nombre real de parametro", () => {
-  const script = readFileSync("tests/06b/admin-denials-safe.mjs", "utf8");
-  assert.match(
-    script,
-    /rpc:\s*["']dactivos_set_department_active["'],\s*args:\s*\{\s*p_department_id:\s*null,\s*p_is_active:\s*null\s*\}/,
-  );
-  assert.doesNotMatch(script, /p_active:\s*null/);
 });

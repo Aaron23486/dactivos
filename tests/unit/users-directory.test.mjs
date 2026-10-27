@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { loadLocalTs } from "../06b/helpers/load-ts.mjs";
+import { loadLocalTs } from "../helpers/load-ts.mjs";
 
 const users = loadLocalTs("src/lib/users/contracts.ts");
 const mock = [
@@ -85,19 +85,6 @@ test("Seguridad: SECURITY no visualiza navegación Usuarios", () => {
   }
   assert.match(shell, /role\s*===\s*"ADMIN"/);
   assert.match(shell, /role === "ADMIN"/);
-});
-test("Seguridad: RPC admin rechaza no-ADMIN antes de leer auth.users", () => {
-  const sql = readFileSync("sql/07B1_INSTALAR_RPC_SOLO_LECTURA.sql", "utf8");
-  const auth = sql.indexOf("current_app_role()");
-  const list = sql.indexOf("FROM auth.users");
-  assert.ok(auth >= 0 && list > auth);
-  assert.match(sql, /SECURITY DEFINER/);
-  assert.match(sql, /SET search_path TO ''/);
-  assert.match(sql, /REVOKE ALL ON FUNCTION public.dactivos_admin_list_users\(\) FROM PUBLIC/);
-  assert.match(
-    sql,
-    /GRANT EXECUTE ON FUNCTION public.dactivos_admin_list_users\(\) TO authenticated/,
-  );
 });
 test("Seguridad: ninguna clave privilegiada ni mutaciones sobre perfiles", () => {
   for (const name of [

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { loadLocalTs } from "./helpers/load-ts.mjs";
+import { loadLocalTs } from "../helpers/load-ts.mjs";
 
 const p = loadLocalTs("src/lib/auth/permissions.ts");
 

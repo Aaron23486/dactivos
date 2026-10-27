@@ -1,4 +1,4 @@
-/** 06B-3: Revision ESTATICA de los flujos de UI existentes; sin navegador ni Supabase. */
+/** Revision ESTATICA de los flujos de UI existentes; sin navegador ni Supabase. */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";

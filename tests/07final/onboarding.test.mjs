@@ -20,8 +20,8 @@ test("Contraseña: sesión comprobada y cierre de sesión al finalizar", () => {
   const action = read("src/app/(auth)/establecer-contrasena/actions.ts");
   assert.match(page, /await connection\(\)/);
   assert.match(page, /await supabase\.auth\.getUser\(\)/);
-  assert.match(action, /password\.length < 12/);
-  assert.match(action, /password !== confirmation/);
+  assert.match(action, /newPasswordSchema\.safeParse\(formData\.get\("password"\)\)/);
+  assert.match(action, /formData\.get\("confirmation"\) !== parsed\.data/);
   assert.match(action, /await supabase\.auth\.getUser\(\)/);
   assert.match(action, /await supabase\.auth\.updateUser\(\{ password \}\)/);
   assert.match(action, /await supabase\.auth\.signOut\(\)/);

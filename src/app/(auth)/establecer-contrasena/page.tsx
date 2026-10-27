@@ -22,13 +22,13 @@ async function PasswordContent({ searchParams }: { searchParams: Params }) {
       <section className="w-full max-w-md space-y-5 rounded-2xl border bg-card p-8 shadow-sm">
         <h1 className="text-2xl font-bold">Crear contraseña de acceso</h1>
         <p className="text-sm text-muted-foreground">
-          Establece una contraseña de 12 a 72 caracteres. Tu cuenta permanecerá inactiva hasta que
-          ADMIN autorice el acceso.
+          Establece una contraseña de 12 a 72 caracteres que combine letras y números. Tu cuenta
+          permanecerá inactiva hasta que ADMIN autorice el acceso.
         </p>
         {(invalid || failed) && (
           <p role="alert" className="text-sm text-destructive">
             {invalid
-              ? "Las contraseñas deben coincidir y tener entre 12 y 72 caracteres."
+              ? "Las contraseñas deben coincidir, tener entre 12 y 72 caracteres y combinar letras y números."
               : "No fue posible actualizar la contraseña. Inténtalo de nuevo."}
           </p>
         )}

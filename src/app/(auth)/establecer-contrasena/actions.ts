@@ -1,21 +1,15 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { newPasswordSchema } from "@/lib/auth/password-policy";
 import { createClient } from "@/lib/supabase/server";
 
 export async function setInvitedPassword(formData: FormData) {
-  const password = formData.get("password");
-  const confirmation = formData.get("confirmation");
-
-  if (
-    typeof password !== "string" ||
-    typeof confirmation !== "string" ||
-    password.length < 12 ||
-    password.length > 72 ||
-    password !== confirmation
-  ) {
+  const parsed = newPasswordSchema.safeParse(formData.get("password"));
+  if (!parsed.success || formData.get("confirmation") !== parsed.data) {
     redirect("/establecer-contrasena?error=invalid");
   }
+  const password = parsed.data;
 
   const supabase = await createClient();
   const {

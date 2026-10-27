@@ -11,7 +11,15 @@
     "test": "node --test",
     "check": "npm run format:check && npm run typecheck && npm run lint && npm test && npm run build",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:up": "supabase start",
+    "db:down": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:status": "supabase status",
+    "env:local": "node scripts/env-local.ts",
+    "demo:setup": "node scripts/demo-setup.ts",
+    "create-admin": "node scripts/users.ts create --role ADMIN",
+    "users": "node scripts/users.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -48,5 +56,9 @@
     "supabase": "^2.120.0",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "type": "module"
 }

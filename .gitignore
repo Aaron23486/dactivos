@@ -1,6 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.*
@@ -10,53 +8,39 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+# Testing
 /coverage
 
-# next.js
+# Next.js
 /.next/
 /out/
-
-# production
 /build
+next-env.d.ts
+*.tsbuildinfo
 
-# misc
-.DS_Store
+# Environment: only the example is versioned
+.env*
+!.env.example
+
+# Supabase CLI cache
+supabase/.temp/
+
+# Exports, backups and keys that must never be committed
+*.dump
+*.sql.bak
+*.bak
+*.backup
 *.pem
+*.key
+*.secret
 
-# debug
+# Misc
+.DS_Store
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-
-# Variables reales de entorno; ejemplo seguro versionable
-.env*
-!.env.example
-
-# vercel
 .vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# Archivos exportados y respaldos locales
-*.sql.bak
-*.backup
-*.dump
-*.secret
-*.key
-DACTIVOS_*_SAFE_*.zip
-DACTIVOS_SCHEMA_CATALOGO_*.json
-.backup-*/
-INSTALL-*.ps1
-REMOVE-*.ps1
-README-06B*.txt
-README-07B*.txt
-*.bak
-*.bak-*
-supabase/.temp/
 
 # Local tool settings
 .claude/

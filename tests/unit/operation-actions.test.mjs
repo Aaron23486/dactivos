@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { loadLocalTs } from "./helpers/load-ts.mjs";
+import { loadLocalTs } from "../helpers/load-ts.mjs";
 
 const contracts = loadLocalTs("src/lib/operations/contracts.ts");
 
@@ -69,8 +69,8 @@ test("Actions: registro valido pasa argumentos reales a RPC, nunca tabla directa
   const t = fake();
   const r = await t.actions.createAsset(
     form({
-      internal_code: "QA06B_01",
-      serial_number: "SERIAL06B",
+      internal_code: "QA_TEST_01",
+      serial_number: "SERIAL_TEST_01",
       category_code: "HANDHELD",
       name: "Equipo QA",
       description: "",
@@ -78,7 +78,7 @@ test("Actions: registro valido pasa argumentos reales a RPC, nunca tabla directa
   );
   assert.equal(r.ok, true);
   assert.equal(t.calls[0].rpc, "dactivos_create_asset");
-  assert.equal(t.calls[0].args.p_internal_code, "QA06B_01");
+  assert.equal(t.calls[0].args.p_internal_code, "QA_TEST_01");
   assert.deepEqual(Array.from(t.permissions), ["assets.create"]);
   assert.ok(t.revalidations.includes("/activos"));
 });
@@ -92,7 +92,7 @@ test("Actions: creacion de departamento exige departments.manage", async () => {
 test("Actions: intento de asignacion sin confirmacion no mueve datos", async () => {
   const t = fake();
   const r = await t.actions.assignAsset(
-    form({ asset_ref: "QA06B_01", employee_id: id2, notes: "" }),
+    form({ asset_ref: "QA_TEST_01", employee_id: id2, notes: "" }),
   );
   assert.equal(r.ok, false);
   assert.equal(t.calls.length, 0);
@@ -102,14 +102,14 @@ test("Actions: asignacion traduce codigo a UUID en servidor", async () => {
   t.setAssets([
     {
       id: id1,
-      internal_code: "QA06B_01",
+      internal_code: "QA_TEST_01",
       serial_number: "SN06B",
       status: "AVAILABLE",
       category_code: "HANDHELD",
     },
   ]);
   const r = await t.actions.assignAsset(
-    form({ asset_ref: "qa06b_01", employee_id: id2, notes: "", confirm: "yes" }),
+    form({ asset_ref: "qa_test_01", employee_id: id2, notes: "", confirm: "yes" }),
   );
   assert.equal(r.ok, true);
   assert.equal(t.calls[0].rpc, "dactivos_list_assets");

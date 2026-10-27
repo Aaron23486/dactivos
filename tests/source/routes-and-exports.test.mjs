@@ -36,31 +36,17 @@ test("No force-dynamic ni service role Next.js", () => {
     assert.doesNotMatch(s, /force-dynamic|service_role|SUPABASE_SERVICE_ROLE_KEY|auth\.admin/);
   }
 });
-test("Historial filtra por rol en la RPC y no expone datos brutos", () => {
-  const s = read("sql/07_FINAL_INSTALL.sql");
-  assert.match(s, /dactivos_list_audit_events/);
-  assert.match(s, /v_role='ADMIN'/);
-  assert.match(s, /a\.status<>'RETIRED'/);
-  assert.match(s, /FROM public\.admin_audit_log l WHERE v_role='ADMIN'/);
-});
+// The role filters of the history and report RPCs and the audited retirement are covered by
+// tests/integration against a real database.
 test("Exportación paginada, rol ADMIN, límites y protección CSV", () => {
-  const r = read("src/app/api/reportes/route.ts"),
-    sql = read("sql/07_FINAL_INSTALL.sql");
+  const r = read("src/app/api/reportes/route.ts");
   assert.match(r, /requirePermission\("reports\.export"\)/);
   assert.match(r, /max\s*=\s*10000/);
   assert.match(r, /offset\s*\+=\s*limit/);
-  assert.match(sql, /dactivos_admin_report_page/);
-  assert.match(sql, /LIMIT p_limit OFFSET p_offset/);
+  assert.match(r, /rpc\("dactivos_admin_report_page"/);
   assert.match(read("src/lib/reports/csv.ts"), /\[=\+@-\]/);
 });
-test("Baja y reactivación ADMIN serializadas y auditadas", () => {
-  const sql = read("sql/07_FINAL_INSTALL.sql");
-  assert.match(sql, /FOR UPDATE/);
-  assert.match(sql, /current_app_role\(\) IS DISTINCT FROM 'ADMIN'/);
-  assert.match(sql, /INSERT INTO public\.asset_lifecycle_log/);
-  assert.match(sql, /lifecycle_immutable/);
-});
-test("No se crean proyectos alternativos ni se incluyen credenciales", () => {
+test("La invitación usa la Edge Function con el JWT del administrador", () => {
   assert.ok(existsSync(path.join(root, "supabase/functions/dactivos-invite/index.ts")));
   const s = read("supabase/functions/dactivos-invite/index.ts");
   assert.match(s, /privileged\.auth\.admin\.inviteUserByEmail/);

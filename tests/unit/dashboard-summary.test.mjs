@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadLocalTs } from "../06b/helpers/load-ts.mjs";
+import { loadLocalTs } from "../helpers/load-ts.mjs";
 
 const { summarizeDashboard } = loadLocalTs("src/lib/dashboard/summary.ts");
 const asset = (id, status) => ({ id, status });

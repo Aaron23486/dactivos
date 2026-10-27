@@ -5,7 +5,7 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { loadLocalTs } from "./helpers/load-ts.mjs";
+import { loadLocalTs } from "../helpers/load-ts.mjs";
 
 const contracts = loadLocalTs("src/lib/operations/contracts.ts");
 const A = "11111111-1111-4111-8111-111111111111";

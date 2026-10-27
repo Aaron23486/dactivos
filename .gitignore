@@ -57,3 +57,6 @@ README-07B*.txt
 *.bak
 *.bak-*
 supabase/.temp/
+
+# Local tool settings
+.claude/

@@ -27,6 +27,17 @@ test("Contraseña: sesión comprobada y cierre de sesión al finalizar (FR-11, D
   assert.match(action, /await supabase\.auth\.signOut\(\)/);
 });
 
+test("Contraseña: página y acción exigen una sesión recién abierta por invitación (FR-11, D12)", () => {
+  const page = read("src/app/(auth)/establecer-contrasena/page.tsx");
+  const action = read("src/app/(auth)/establecer-contrasena/actions.ts");
+  for (const code of [page, action]) {
+    assert.match(code, /await supabase\.auth\.getClaims\(\)/);
+    assert.match(code, /isFreshInvitationSession\(session\?\.claims\)/);
+  }
+  // La comprobación ocurre antes de cambiar la contraseña.
+  assert.ok(action.indexOf("isFreshInvitationSession(") < action.indexOf("updateUser("));
+});
+
 test("Solo usa SDK Auth y no inserta usuarios ni cambia permisos (FR-11, D6)", () => {
   for (const path of [
     "src/app/(auth)/aceptar-invitacion/actions.ts",

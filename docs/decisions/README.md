@@ -15,3 +15,4 @@ Each significant decision has a short record with its context, the decision, the
 | [0009](0009-content-security-policy.md)                | Content Security Policy without nonces                                                       | Accepted |
 | [0010](0010-sign-in-throttling.md)                     | Sign-in throttling per client IP and per email                                               | Accepted |
 | [0011](0011-supply-chain-in-ci.md)                     | Dependency audit, secret scanning and reviewed Dependabot updates                            | Accepted |
+| [0012](0012-session-hardening.md)                     | Session hardening: `httpOnly` cookie, live-session role check, password creation only after an invitation | Accepted |

@@ -7,6 +7,8 @@ Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semve
 - **Security** the repository is public with `main` protected (pull requests with the `checks`, `supply-chain` and `integration` jobs passing), GitHub secret scanning with push protection, CodeQL, Dependabot security updates and private vulnerability reporting.
 - **Changed** the integration tests to build their run prefix with `crypto.randomInt` (CodeQL `js/insecure-randomness`).
 - **Changed** code comments and test names to cite the requirement, rule and decision IDs they implement or cover; added `CLAUDE.md` with the project rules and commands.
+- **Security** session hardening after the pre-production review ([ADR 0012](docs/decisions/0012-session-hardening.md)): the session cookie is `httpOnly`, `Secure` in production and lasts 12 hours instead of 400 days; Auth ends sessions after 12 hours or 4 hours idle; signing out also ends access for a copied token; the password page only serves the session opened by an invitation, and Auth requires a recent sign-in to change a password.
+- **Fixed** the README and the architecture and security documents, which described the session cookie as `httpOnly` before it was.
 
 ## [1.0.0] — 2026-10-27
 

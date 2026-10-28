@@ -13,6 +13,6 @@ These documents describe what DACTIVOS does, how it is built and why, and how it
 
 The project history is in [CHANGELOG.md](../CHANGELOG.md).
 
-**Identifiers.** Functional requirements (FR-1…), non-functional requirements (NFR-1…), business rules (R1…R13) and design decisions (D1…D11) have stable identifiers so that code, tests and ADRs can point to them.
+**Identifiers.** Functional requirements (FR-1…), non-functional requirements (NFR-1…), business rules (R1…R13) and design decisions (D1…D12) have stable identifiers so that code, tests and ADRs can point to them.
 
 **Language.** The documentation is in English; the user interface is in Spanish, so screen names and messages are quoted as they appear in the app.

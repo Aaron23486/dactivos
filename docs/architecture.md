@@ -98,8 +98,9 @@ The schema is in two migrations: `20261013000000_initial_schema.sql` (the applic
 
 ## 5. Authentication and accounts
 
-- Sign-in with email and password through Supabase Auth; the session lives in `httpOnly` cookies managed by `@supabase/ssr`. There is no public sign-up.
-- The role comes from `profiles` on every request, so deactivating an account cuts access on its next request (R13).
+- Sign-in with email and password through Supabase Auth. The session lives in a cookie written by `@supabase/ssr` and hardened by the app: `httpOnly`, `Secure` in production, `SameSite=Lax`, 12 hours. Auth ends sessions after 12 hours or 4 hours without use ([ADR 0012](decisions/0012-session-hardening.md)). There is no public sign-up.
+- The role comes from `profiles` on every request and only while the token's Auth session is alive, so deactivating an account or signing out cuts access on the next request, also for a copied token (R13).
+- `/establecer-contrasena` only accepts the session opened by an invitation link in the last 15 minutes; passwords are reset by an administrator from the terminal.
 - Invitations ([ADR 0006](decisions/0006-invitations-through-an-edge-function.md)): the Usuarios screen calls the `dactivos-invite` Edge Function with the administrator's JWT. It checks the caller is an active ADMIN, asks Auth to send the invitation, and links an **inactive** profile through an audited RPC called with the administrator's own JWT. The email opens `/aceptar-invitacion`, which consumes the token only when the person presses the button, so link scanners cannot use it up.
 - Terminal commands use the service key of the local Supabase (read from the Supabase CLI, never from `.env.local`) and the `dactivos_terminal_set_access` function, which only `service_role` can run.
 - Sign-in attempts are limited per client IP and per email in the server's memory ([ADR 0010](decisions/0010-sign-in-throttling.md)).
@@ -132,3 +133,4 @@ The schema is in two migrations: `20261013000000_initial_schema.sql` (the applic
 | D9  | Content Security Policy without nonces because of Partial Prerendering                       | [0009](decisions/0009-content-security-policy.md)                   |
 | D10 | Sign-in throttling per client IP and per email in the app                                    | [0010](decisions/0010-sign-in-throttling.md)                        |
 | D11 | Dependency audit, secret scanning and reviewed Dependabot updates in CI                      | [0011](decisions/0011-supply-chain-in-ci.md)                        |
+| D12 | Hardened session cookie, live-session role check and password creation only after an invitation | [0012](decisions/0012-session-hardening.md)                     |

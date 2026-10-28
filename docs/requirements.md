@@ -93,7 +93,7 @@ The operating cycle of an asset is:
 - **R10** — Reasons for retirement, reactivation, invitations and account changes have 10 to 500 characters without control characters.
 - **R11** — Audit records (deliveries, maintenance, catalog changes, account changes, retirements) are written by the database in the same transaction as the change, and the retirement log cannot be modified or deleted.
 - **R12** — An administrator cannot change their own account, and there is always at least one active administrator.
-- **R13** — A deactivated account loses access on its next request, without waiting for its session to expire.
+- **R13** — A deactivated or signed-out account loses access on its next request, without waiting for its session to expire, even if a copy of its token is still valid.
 
 ## 6. Non-functional requirements
 

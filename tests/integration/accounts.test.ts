@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { before, test } from "node:test";
-import { admin, call, createUser, type TestUser } from "./support.ts";
+import { admin, call, createUser, target, type TestUser } from "./support.ts";
 
 // Account administration: in-app RPCs (Usuarios screen) and the terminal-only RPC.
 
@@ -50,6 +50,29 @@ test("deactivating an account cuts its access on the next request, and it is aud
     p_reason: "Fin de contrato del guarda de prueba.",
   });
   assert.equal(again.data, false);
+});
+
+test("signing out ends access even for a copied token that has not expired (R13, D12)", async () => {
+  const guard = await createUser("SECURITY");
+  const { data } = await guard.client.auth.getSession();
+  const copiedToken = data.session!.access_token;
+  assert.equal((await call(guard.client, "dactivos_list_assets")).code, null);
+
+  await guard.client.auth.signOut({ scope: "global" });
+
+  // The JWT is still validly signed and unexpired; only the Auth session is gone.
+  const replay = await fetch(`${target.url}/rest/v1/rpc/dactivos_list_assets`, {
+    method: "POST",
+    headers: {
+      apikey: target.publishableKey,
+      Authorization: `Bearer ${copiedToken}`,
+      "Content-Type": "application/json",
+    },
+    body: "{}",
+  });
+  const body = (await replay.json()) as { code?: string };
+  assert.equal(replay.ok, false);
+  assert.equal(body.code, "42501");
 });
 
 test("an administrator cannot change their own account (R12)", async () => {

@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabasePublicConfig } from "./config";
+import { hardenSessionCookie } from "./cookie-options";
 
 export async function updateSession(request: NextRequest) {
   const { url, publishableKey } = getSupabasePublicConfig();
@@ -20,7 +21,7 @@ export async function updateSession(request: NextRequest) {
         response = NextResponse.next({ request });
 
         cookiesToSet.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
+          response.cookies.set(name, value, hardenSessionCookie(options));
         });
 
         if (headers) {

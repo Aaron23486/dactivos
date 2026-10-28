@@ -27,7 +27,9 @@ async function LoginContent({ searchParams }: LoginProps) {
       ? "No fue posible iniciar sesión. Verifica tus credenciales e inténtalo nuevamente."
       : params.error === "throttled"
         ? "Demasiados intentos de inicio de sesión. Espera unos minutos e inténtalo nuevamente."
-        : null;
+        : params.error === "invitation"
+          ? "El enlace de invitación no es válido o ya venció. Solicita al administrador una nueva invitación."
+          : null;
 
   return (
     <main className="flex min-h-dvh items-center justify-center bg-background px-4 py-10">

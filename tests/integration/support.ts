@@ -2,10 +2,10 @@
  * Shared setup for integration tests. They run against the local Supabase (npm run db:up) through
  * the same HTTP APIs the app uses: Auth, PostgREST and the database RPCs.
  *
- * Every run creates its own accounts and records with a unique TEST… prefix, so it never depends
+ * Every run creates its own accounts and records with a unique T… prefix, so it never depends
  * on or changes the demo data. `npm run db:reset` returns the local database to an empty state.
  */
-import { randomUUID } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { generateDemoPassword } from "../../scripts/lib/demo-password.ts";
 import {
@@ -21,7 +21,7 @@ if (!target.local) throw new Error("Integration tests only run against the local
 export const admin = adminClient(target);
 
 /** Unique per run: department codes only accept A-Z, 0-9 and underscores. */
-export const RUN = `T${Date.now().toString(36).toUpperCase()}${Math.floor(Math.random() * 1e4)}`;
+export const RUN = `T${Date.now().toString(36).toUpperCase()}${randomInt(10_000)}`;
 
 export function anonClient(): SupabaseClient {
   return createClient(target.url, target.publishableKey, {

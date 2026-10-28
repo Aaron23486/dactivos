@@ -58,7 +58,16 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Services the tests do not use are left out to start faster.
-      - run: npx supabase start -x studio,postgres-meta,mailpit,edge-runtime
+      # Services the tests do not use are left out to start faster. The image registry sometimes
+      # refuses downloads for a while ("toomanyrequests"), so the start is retried before failing.
+      - name: Start the local Supabase
+        run: |
+          for attempt in 1 2 3; do
+            npx supabase start -x studio,postgres-meta,mailpit,edge-runtime && exit 0
+            echo "Attempt $attempt to start Supabase failed; retrying in 30 seconds."
+            npx supabase stop --no-backup || true
+            sleep 30
+          done
+          exit 1
       - run: npm run demo:setup
       - run: npm run test:integration

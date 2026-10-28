@@ -11,6 +11,8 @@ Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semve
 - **Fixed** the README and the architecture and security documents, which described the session cookie as `httpOnly` before it was.
 - **Security** security events (failed and throttled sign-ins, denied access, rejected invitation links) logged as JSON lines without passwords, tokens or emails in clear ([ADR 0013](docs/decisions/0013-security-events-and-export-audit.md)).
 - **Security** password-recovery and magic-link emails, which the app does not use, no longer carry a link or token; Auth sends at most one email per address and minute. The security document now covers direct Auth API calls, the local Supabase listening on every interface, and GraphQL on hosted projects.
+- **Added** to the README how to open Supabase Studio and connect a PostgreSQL client to the local database.
+- **Changed** CI to retry starting the local Supabase when the image registry refuses downloads, and the unit-test module loader to allow 10 seconds instead of 2, which failed correct tests on a busy machine.
 - **Added** an append-only audit of CSV exports: who exported which report, range and rows, recorded before the file is delivered and shown in the history as `REPORTE`.
 
 ## [1.0.0] — 2026-10-27

@@ -2,6 +2,11 @@
 
 Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semver.org/); before 1.0.0 the work is grouped by stage.
 
+## [Unreleased]
+
+- **Security** the repository is public with `main` protected (pull requests with the `checks`, `supply-chain` and `integration` jobs passing), GitHub secret scanning with push protection, CodeQL, Dependabot security updates and private vulnerability reporting.
+- **Changed** the integration tests to build their run prefix with `crypto.randomInt` (CodeQL `js/insecure-randomness`).
+
 ## [1.0.0] — 2026-10-27
 
 First release: the asset tracking application with its database rules, hardened and prepared so anyone can clone it, start their own local database and evaluate it with demo accounts.

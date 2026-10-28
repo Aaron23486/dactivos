@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { requirePermission } from "@/lib/auth/require-permission";
 import { createClient } from "@/lib/supabase/server";
 import { isReportKind, makeCSV, keepDate } from "@/lib/reports/csv";
+/** Exportación CSV para ADMIN, paginada y sin entregar archivos parciales (FR-10). */
 export async function GET(req: NextRequest) {
   await requirePermission("reports.export");
   const params = req.nextUrl.searchParams;

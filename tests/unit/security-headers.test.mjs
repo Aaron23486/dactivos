@@ -17,7 +17,7 @@ async function headersFor(nodeEnv) {
   }
 }
 
-test("Cabeceras: todas las rutas reciben CSP y protecciones del navegador", async () => {
+test("Cabeceras: todas las rutas reciben CSP y protecciones del navegador (NFR-1, D9)", async () => {
   const { source, poweredBy, values } = await headersFor("production");
   assert.equal(source, "/:path*");
   assert.equal(poweredBy, false);
@@ -41,7 +41,7 @@ test("Cabeceras: todas las rutas reciben CSP y protecciones del navegador", asyn
   assert.match(values["Strict-Transport-Security"], /max-age=\d+/);
 });
 
-test("Cabeceras: en desarrollo no se fuerza HTTPS", async () => {
+test("Cabeceras: en desarrollo no se fuerza HTTPS (NFR-1, D9)", async () => {
   const { values } = await headersFor("development");
   assert.equal(values["Strict-Transport-Security"], undefined);
   assert.ok(!values["Content-Security-Policy"].includes("upgrade-insecure-requests"));

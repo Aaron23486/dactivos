@@ -1,5 +1,5 @@
 /**
- * Account management from the terminal, for the first administrator and for recovery.
+ * Account management from the terminal, for the first administrator and for recovery (FR-12, D7).
  * Day-to-day, an administrator invites and manages accounts from the Usuarios screen.
  *
  *   npm run users -- list

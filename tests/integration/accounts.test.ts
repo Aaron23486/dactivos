@@ -22,7 +22,7 @@ async function lastAudit(targetUserId: string) {
   return data!;
 }
 
-test("deactivating an account cuts its access on the next request, and it is audited", async () => {
+test("deactivating an account cuts its access on the next request, and it is audited (FR-11, R13)", async () => {
   const guard = await createUser("SECURITY");
   assert.equal((await call(guard.client, "dactivos_list_assets")).code, null);
 
@@ -52,7 +52,7 @@ test("deactivating an account cuts its access on the next request, and it is aud
   assert.equal(again.data, false);
 });
 
-test("an administrator cannot change their own account", async () => {
+test("an administrator cannot change their own account (R12)", async () => {
   const result = await call(adminUser.client, "dactivos_admin_set_user_access", {
     p_user_id: adminUser.id,
     p_role: "SECURITY",
@@ -62,7 +62,7 @@ test("an administrator cannot change their own account", async () => {
   assert.equal(result.code, "23514");
 });
 
-test("an invited identity is linked once, inactive, and audited with its inviter", async () => {
+test("an invited identity is linked once, inactive, and audited with its inviter (FR-11)", async () => {
   const invited = await createUser(null);
   const linked = await call(adminUser.client, "dactivos_admin_link_invited_user", {
     p_user_id: invited.id,
@@ -84,7 +84,7 @@ test("an invited identity is linked once, inactive, and audited with its inviter
   assert.equal(twice.code, "23505");
 });
 
-test("the terminal RPC creates and changes access with an audit entry and no app actor", async () => {
+test("the terminal RPC creates and changes access with an audit entry and no app actor (FR-12)", async () => {
   const account = await createUser(null);
   const { data: created } = await admin.rpc("dactivos_terminal_set_access", {
     p_user_id: account.id,

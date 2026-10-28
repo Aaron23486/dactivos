@@ -6,3 +6,4 @@ supabase/migrations
 supabase/.temp
 docs
 AGENTS.md
+CLAUDE.md

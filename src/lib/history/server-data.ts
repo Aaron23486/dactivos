@@ -1,6 +1,7 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { parseAuditEvents } from "@/lib/history/contracts";
+/** Historial paginado; la RPC filtra los eventos según el rol (FR-9). */
 export async function loadAuditEvents(offset: number) {
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("dactivos_list_audit_events", {

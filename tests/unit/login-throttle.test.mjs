@@ -12,7 +12,7 @@ function clock(start = 0) {
   return { now: () => now, advance: (ms) => (now += ms) };
 }
 
-test("Login: una IP no puede superar el límite de intentos por minuto", () => {
+test("Login: una IP no puede superar el límite de intentos por minuto (NFR-1, D10)", () => {
   const c = clock();
   const throttle = new LoginThrottle(c.now);
   for (let i = 0; i < LOGIN_ATTEMPTS_PER_MINUTE; i++) {
@@ -24,7 +24,7 @@ test("Login: una IP no puede superar el límite de intentos por minuto", () => {
   assert.equal(throttle.allow("10.0.0.1", "otra@example.com"), true, "la ventana se reinicia");
 });
 
-test("Login: un correo se bloquea tras fallos consecutivos y se libera al vencer el plazo", () => {
+test("Login: un correo se bloquea tras fallos consecutivos y se libera al vencer el plazo (NFR-1, D10)", () => {
   const c = clock();
   const throttle = new LoginThrottle(c.now);
   const email = "guarda@example.com";
@@ -37,7 +37,7 @@ test("Login: un correo se bloquea tras fallos consecutivos y se libera al vencer
   assert.equal(throttle.allow("10.0.2.1", email), true);
 });
 
-test("Login: un inicio exitoso reinicia el conteo de fallos", () => {
+test("Login: un inicio exitoso reinicia el conteo de fallos (NFR-1, D10)", () => {
   const throttle = new LoginThrottle(clock().now);
   const email = "admin@example.com";
   for (let i = 0; i < LOGIN_MAX_FAILURES - 1; i++) throttle.recordFailure(email);

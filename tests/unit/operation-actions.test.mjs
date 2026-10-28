@@ -51,7 +51,7 @@ function form(data) {
 const id1 = "11111111-1111-4111-8111-111111111111";
 const id2 = "22222222-2222-4222-8222-222222222222";
 
-test("Actions: datos invalidos de activo no llaman la base de datos", async () => {
+test("Actions: datos invalidos de activo no llaman la base de datos (FR-5–FR-7, R10)", async () => {
   const t = fake();
   const r = await t.actions.createAsset(
     form({
@@ -65,7 +65,7 @@ test("Actions: datos invalidos de activo no llaman la base de datos", async () =
   assert.equal(r.ok, false);
   assert.equal(t.calls.length, 0);
 });
-test("Actions: registro valido pasa argumentos reales a RPC, nunca tabla directa", async () => {
+test("Actions: registro valido pasa argumentos reales a RPC, nunca tabla directa (FR-5–FR-7, R10)", async () => {
   const t = fake();
   const r = await t.actions.createAsset(
     form({
@@ -82,14 +82,14 @@ test("Actions: registro valido pasa argumentos reales a RPC, nunca tabla directa
   assert.deepEqual(Array.from(t.permissions), ["assets.create"]);
   assert.ok(t.revalidations.includes("/activos"));
 });
-test("Actions: creacion de departamento exige departments.manage", async () => {
+test("Actions: creacion de departamento exige departments.manage (FR-5–FR-7, R10)", async () => {
   const t = fake();
   const r = await t.actions.createDepartment(form({ code: "QA06B_TI", name: "Tecnologia QA" }));
   assert.equal(r.ok, true);
   assert.equal(t.permissions[0], "departments.manage");
   assert.equal(t.calls[0].rpc, "dactivos_create_department");
 });
-test("Actions: intento de asignacion sin confirmacion no mueve datos", async () => {
+test("Actions: intento de asignacion sin confirmacion no mueve datos (FR-5–FR-7, R10)", async () => {
   const t = fake();
   const r = await t.actions.assignAsset(
     form({ asset_ref: "QA_TEST_01", employee_id: id2, notes: "" }),
@@ -97,7 +97,7 @@ test("Actions: intento de asignacion sin confirmacion no mueve datos", async () 
   assert.equal(r.ok, false);
   assert.equal(t.calls.length, 0);
 });
-test("Actions: asignacion traduce codigo a UUID en servidor", async () => {
+test("Actions: asignacion traduce codigo a UUID en servidor (FR-5–FR-7, R10)", async () => {
   const t = fake();
   t.setAssets([
     {
@@ -117,7 +117,7 @@ test("Actions: asignacion traduce codigo a UUID en servidor", async () => {
   assert.equal(t.calls[1].args.p_asset_id, id1);
   assert.ok(t.permissions.includes("assignments.create"));
 });
-test("Actions: referencia ambigua impide asignacion", async () => {
+test("Actions: referencia ambigua impide asignacion (FR-5–FR-7, R10)", async () => {
   const t = fake();
   t.setAssets([
     { id: id1, internal_code: "QA_DUP", serial_number: "UNO" },
@@ -132,7 +132,7 @@ test("Actions: referencia ambigua impide asignacion", async () => {
     false,
   );
 });
-test("Actions: devolucion DAMAGED exige descripcion suficiente", async () => {
+test("Actions: devolucion DAMAGED exige descripcion suficiente (FR-5–FR-7, R10)", async () => {
   const t = fake();
   const r = await t.actions.returnAsset(
     form({ id: id1, condition: "DAMAGED", notes: "roto", confirm: "yes" }),
@@ -140,7 +140,7 @@ test("Actions: devolucion DAMAGED exige descripcion suficiente", async () => {
   assert.equal(r.ok, false);
   assert.equal(t.calls.length, 0);
 });
-test("Actions: devolucion GOOD confirmada utiliza RPC autorizada", async () => {
+test("Actions: devolucion GOOD confirmada utiliza RPC autorizada (FR-5–FR-7, R10)", async () => {
   const t = fake();
   const r = await t.actions.returnAsset(
     form({ id: id1, condition: "GOOD", notes: "", confirm: "yes" }),
@@ -149,7 +149,7 @@ test("Actions: devolucion GOOD confirmada utiliza RPC autorizada", async () => {
   assert.equal(t.calls[0].rpc, "dactivos_return_asset");
   assert.equal(t.permissions[0], "assignments.return");
 });
-test("Actions: resolucion exige justificacion y confirmacion", async () => {
+test("Actions: resolucion exige justificacion y confirmacion (FR-5–FR-7, R10)", async () => {
   const t = fake();
   assert.equal(
     (await t.actions.resolveMaintenance(form({ id: id1, notes: "Muy corta", confirm: "yes" }))).ok,
@@ -157,7 +157,7 @@ test("Actions: resolucion exige justificacion y confirmacion", async () => {
   );
   assert.equal(t.calls.length, 0);
 });
-test("Actions: liberacion requiere confirmacion fisica explicita", async () => {
+test("Actions: liberacion requiere confirmacion fisica explicita (FR-5–FR-7, R10)", async () => {
   const t = fake();
   assert.equal(
     (
@@ -175,7 +175,7 @@ test("Actions: liberacion requiere confirmacion fisica explicita", async () => {
   assert.equal(t.calls[0].rpc, "dactivos_release_asset");
   assert.equal(t.permissions[0], "maintenance.validate");
 });
-test("Actions: error 42501 no expone mensajes SQL al cliente", async () => {
+test("Actions: error 42501 no expone mensajes SQL al cliente (FR-5–FR-7, R10)", async () => {
   const t = fake();
   t.setError({ code: "42501", message: "SQL secreto interno" });
   const r = await t.actions.updateAsset(form({ id: id1, name: "Equipo QA", description: "" }));

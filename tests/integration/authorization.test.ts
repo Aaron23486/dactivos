@@ -66,7 +66,7 @@ before(async () => {
   ]);
 });
 
-describe("anonymous visitor", () => {
+describe("anonymous visitor (R1)", () => {
   test("cannot read any table", async () => {
     const anon = anonClient();
     for (const table of TABLES) {
@@ -84,7 +84,7 @@ describe("anonymous visitor", () => {
   });
 });
 
-describe("signed-in account without an active profile", () => {
+describe("signed-in account without an active profile (R1, R13)", () => {
   test("has no role and every read is refused", async () => {
     for (const user of [noProfile, inactive]) {
       assert.equal((await call(user.client, "current_app_role")).data, null);
@@ -95,7 +95,7 @@ describe("signed-in account without an active profile", () => {
   });
 });
 
-describe("SECURITY role", () => {
+describe("SECURITY role (FR-1, R1)", () => {
   test("reads the operational lists", async () => {
     for (const name of READ_RPCS) assert.equal((await call(security.client, name)).code, null);
   });
@@ -113,7 +113,7 @@ describe("SECURITY role", () => {
     }
   });
 
-  test("sees no account, configuration or retirement events in the history", async () => {
+  test("sees no account, configuration or retirement events in the history (FR-9)", async () => {
     const events = rows(
       (await call(security.client, "dactivos_list_audit_events", { p_limit: 100, p_offset: 0 }))
         .data,
@@ -125,7 +125,7 @@ describe("SECURITY role", () => {
   });
 });
 
-describe("ADMIN role", () => {
+describe("ADMIN role (FR-1, R1)", () => {
   test("can call the administrative reads", async () => {
     assert.equal((await call(adminUser.client, "dactivos_admin_list_users")).code, null);
     const report = await call(adminUser.client, "dactivos_admin_report_page", {
@@ -136,7 +136,7 @@ describe("ADMIN role", () => {
     assert.equal(report.code, null);
   });
 
-  test("sees account events in the history", async () => {
+  test("sees account events in the history (FR-9)", async () => {
     const events = rows(
       (await call(adminUser.client, "dactivos_list_audit_events", { p_limit: 100, p_offset: 0 }))
         .data,
@@ -144,7 +144,7 @@ describe("ADMIN role", () => {
     assert.ok(events.some((e) => e.source === "ADMINISTRACION"));
   });
 
-  test("cannot run the terminal-only account RPC", async () => {
+  test("cannot run the terminal-only account RPC (FR-12)", async () => {
     const result = await call(adminUser.client, "dactivos_terminal_set_access", {
       p_user_id: security.id,
       p_role: "ADMIN",

@@ -3,7 +3,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { parseAdminUsers } from "@/lib/users/contracts";
 
-/** Solo se invoca después de requirePermission("users.manage") en el servidor. */
+/** Directorio de cuentas (FR-11). Solo se invoca después de requirePermission("users.manage") en el servidor. */
 export async function loadAdminUsers() {
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("dactivos_admin_list_users");

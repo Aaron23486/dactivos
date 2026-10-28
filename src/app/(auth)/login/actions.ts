@@ -11,6 +11,7 @@ async function clientIp(): Promise<string> {
   return forwarded?.split(",")[0]?.trim() || "direct";
 }
 
+/** Inicio de sesión con mensajes genéricos y límites por IP y por correo (NFR-1, D10). */
 export async function signIn(formData: FormData) {
   const email = formData.get("email");
   const password = formData.get("password");

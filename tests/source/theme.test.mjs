@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 
 const read = (name) => readFileSync(name, "utf8");
 
-test("Tema: paleta Industrial Tech y dark permanente", () => {
+test("Tema: paleta Industrial Tech y dark permanente (NFR-5)", () => {
   const css = read("src/app/globals.css");
   const layout = read("src/app/layout.tsx");
   for (const color of ["#111827", "#1f2937", "#06b6d4", "#f59e0b"]) {
@@ -14,7 +14,7 @@ test("Tema: paleta Industrial Tech y dark permanente", () => {
   assert.match(css, /prefers-reduced-motion/);
 });
 
-test("Tema: agrupaciones de navegación conservan todas las rutas", () => {
+test("Tema: agrupaciones de navegación conservan todas las rutas (NFR-5)", () => {
   const shell = read("src/components/layout/app-shell.tsx");
   const nav = read("src/lib/navigation.ts");
   for (const route of [
@@ -37,7 +37,7 @@ test("Tema: agrupaciones de navegación conservan todas las rutas", () => {
   assert.match(shell, /aria-label="Menú móvil"/);
 });
 
-test("Tema: tarjetas y estados mantienen valores de backend", () => {
+test("Tema: tarjetas y estados mantienen valores de backend (NFR-5)", () => {
   const primitives = read("src/components/operations/primitives.tsx");
   const overview = read("src/components/dashboard/dashboard-overview.tsx");
   for (const status of ["AVAILABLE", "ASSIGNED", "MAINTENANCE", "RETIRED", "OPEN", "RESOLVED"]) {
@@ -48,7 +48,7 @@ test("Tema: tarjetas y estados mantienen valores de backend", () => {
   assert.match(overview, /href=\{event\.href\}/);
 });
 
-test("Tema: acciones no pierden protección de doble envío", () => {
+test("Tema: acciones no pierden protección de doble envío (NFR-5)", () => {
   const form = read("src/components/operations/action-form.tsx");
   assert.match(form, /if \(busy\) return/);
   assert.match(form, /await action\(fd\)/);
@@ -56,7 +56,7 @@ test("Tema: acciones no pierden protección de doble envío", () => {
   assert.match(form, /disabled=\{busy\}/);
 });
 
-test("Tema: no cambia seguridad ni lógica del esquema", () => {
+test("Tema: no cambia seguridad ni lógica del esquema (NFR-5)", () => {
   const files = [
     "src/app/globals.css",
     "src/app/layout.tsx",

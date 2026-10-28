@@ -1,3 +1,4 @@
+/** Evento del historial combinado de auditoría (FR-9, R11). */
 export type AuditEvent = {
   id: string;
   created_at: string;

@@ -1,5 +1,6 @@
 import type { Asset, Assignment, Employee, MaintenanceCase } from "@/lib/operations/contracts";
 
+/** Resumen del dashboard: un valor que no se pudo leer nunca se muestra como cero (FR-13). */
 export type DashboardInputs = {
   assets: Asset[] | null;
   assignments: Assignment[] | null;

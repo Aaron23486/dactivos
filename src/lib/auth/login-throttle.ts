@@ -1,5 +1,5 @@
 /**
- * Sign-in throttling, kept in this server's memory.
+ * Sign-in throttling, kept in this server's memory (NFR-1, D10).
  *
  * Supabase Auth also limits sign-ins per IP, but every request reaches it from this server, so its
  * limit is shared by all users. Here the limits apply per client IP and per email:

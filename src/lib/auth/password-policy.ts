@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Password rule shared by the set-password form and the terminal commands. It matches the Supabase
+ * Password rule shared by the set-password form and the terminal commands (NFR-1). It matches the Supabase
  * Auth settings in supabase/config.toml (minimum_password_length = 12, letters_digits); 72 is the
  * longest password bcrypt can hash without truncating it.
  */

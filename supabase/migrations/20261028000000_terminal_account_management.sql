@@ -1,4 +1,4 @@
--- Account management from the server terminal (npm run users / create-admin / demo:setup).
+-- Account management from the server terminal (npm run users / create-admin / demo:setup); FR-12, D7.
 -- Changes the access profile and writes the audit entry in the same transaction. There is no
 -- app user behind these commands, so actor_user_id is NULL and the event name says where it came from.
 -- Only service_role (server-side scripts) can execute it; anon and authenticated cannot.

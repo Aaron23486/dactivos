@@ -33,44 +33,44 @@ const mock = [
     last_sign_in_at: null,
   },
 ];
-test("Directorio: no fabrica usuarios ante una respuesta nula", () =>
+test("Directorio: no fabrica usuarios ante una respuesta nula (FR-11)", () =>
   assert.equal(users.parseAdminUsers(null).length, 0));
-test("Directorio: administra ADMIN, SECURITY y usuarios sin perfil sin inventar roles", () => {
+test("Directorio: administra ADMIN, SECURITY y usuarios sin perfil sin inventar roles (FR-11)", () => {
   const [a, b, c] = users.parseAdminUsers(mock);
   assert.equal(a.role, "ADMIN");
   assert.equal(b.role, "SECURITY");
   assert.equal(c.role, null);
 });
-test("Directorio: los estados solo aceptan booleanos reales", () => {
+test("Directorio: los estados solo aceptan booleanos reales (FR-11)", () => {
   const [u] = users.parseAdminUsers([{ id: "1", role: "SECURITY", is_active: "true" }]);
   assert.equal(u.is_active, null);
   assert.equal(users.userStatus(u), "UNLINKED");
 });
-test("Directorio: los perfiles sin enlace y los inactivos no son activos", () => {
+test("Directorio: los perfiles sin enlace y los inactivos no son activos (FR-11)", () => {
   assert.deepEqual(Array.from(users.parseAdminUsers(mock), users.userStatus), [
     "ACTIVE",
     "INACTIVE",
     "UNLINKED",
   ]);
 });
-test("Directorio: elimina identificadores duplicados y entradas inválidas", () => {
+test("Directorio: elimina identificadores duplicados y entradas inválidas (FR-11)", () => {
   assert.equal(users.parseAdminUsers([mock[0], mock[0], null, {}, [], { id: "" }]).length, 1);
 });
-test("Directorio: marcas de tiempo inválidas se devuelven como null", () => {
+test("Directorio: marcas de tiempo inválidas se devuelven como null (FR-11)", () => {
   const [u] = users.parseAdminUsers([
     { id: "x", created_at: "nunca", last_sign_in_at: "2026-10-11" },
   ]);
   assert.equal(u.created_at, null);
   assert.equal(u.last_sign_in_at, "2026-10-11");
 });
-test("Seguridad: página requiere users.manage y no usa tablas directas", () => {
+test("Seguridad: página requiere users.manage y no usa tablas directas (FR-11)", () => {
   const page = readFileSync("src/app/(dashboard)/usuarios/page.tsx", "utf8");
   const server = readFileSync("src/lib/users/server-data.ts", "utf8");
   assert.match(page, /requirePermission\("users\.manage"\)/);
   assert.match(server, /rpc\("dactivos_admin_list_users"\)/);
   assert.doesNotMatch(server, /\.from\(/);
 });
-test("Seguridad: SECURITY no visualiza navegación Usuarios", () => {
+test("Seguridad: SECURITY no visualiza navegación Usuarios (FR-11)", () => {
   const shell = readFileSync("src/components/layout/app-shell.tsx", "utf8");
   const nav = readFileSync("src/lib/navigation.ts", "utf8");
   assert.match(nav, /href:\s*"\/usuarios"/);
@@ -86,7 +86,7 @@ test("Seguridad: SECURITY no visualiza navegación Usuarios", () => {
   assert.match(shell, /role\s*===\s*"ADMIN"/);
   assert.match(shell, /role === "ADMIN"/);
 });
-test("Seguridad: ninguna clave privilegiada ni mutaciones sobre perfiles", () => {
+test("Seguridad: ninguna clave privilegiada ni mutaciones sobre perfiles (FR-11)", () => {
   for (const name of [
     "src/lib/users/contracts.ts",
     "src/lib/users/server-data.ts",

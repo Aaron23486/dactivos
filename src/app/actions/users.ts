@@ -22,7 +22,10 @@ const accessSchema = z.object({
   confirm: z.literal("yes"),
 });
 
-/** Una cuenta Auth sin perfil no se crea aquí. No utilizamos claves privilegiadas. */
+/**
+ * Cambia el rol y el estado de otra cuenta, con motivo y auditoría (FR-11, R12, R13).
+ * Una cuenta Auth sin perfil no se crea aquí. No utilizamos claves privilegiadas.
+ */
 export async function setUserAccess(form: FormData): Promise<OperationResult> {
   const actor = await requirePermission("users.manage");
   const validated = accessSchema.safeParse({

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { newPasswordSchema } from "@/lib/auth/password-policy";
 import { createClient } from "@/lib/supabase/server";
 
+/** Contraseña de una cuenta invitada; queda inactiva hasta que ADMIN la habilite (FR-11, NFR-1). */
 export async function setInvitedPassword(formData: FormData) {
   const parsed = newPasswordSchema.safeParse(formData.get("password"));
   if (!parsed.success || formData.get("confirmation") !== parsed.data) {

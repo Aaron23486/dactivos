@@ -51,7 +51,7 @@ const ok = (data) => ({ data, error: null });
 
 // Se simula la respuesta de un bloqueo atomico en PostgreSQL.
 // Esta simulacion prueba que el frontend no reintente las escrituras rechazadas.
-test("Simulacion: dos entregas del mismo activo, una aceptada y otra rechazada, sin reintentos", async () => {
+test("Simulacion: dos entregas del mismo activo, una aceptada y otra rechazada, sin reintentos (NFR-2)", async () => {
   let assigned = false;
   const h = harness((name) => {
     if (name === "dactivos_list_assets")
@@ -84,7 +84,7 @@ test("Simulacion: dos entregas del mismo activo, una aceptada y otra rechazada, 
   assert.equal(h.revalidation.length, 6);
 });
 
-test("Simulacion: dos devoluciones de la misma asignacion no producen reintentos", async () => {
+test("Simulacion: dos devoluciones de la misma asignacion no producen reintentos (NFR-2)", async () => {
   let returned = false;
   const h = harness((name) => {
     assert.equal(name, "dactivos_return_asset");
@@ -102,7 +102,7 @@ test("Simulacion: dos devoluciones de la misma asignacion no producen reintentos
   assert.equal(h.calls.length, 2);
 });
 
-test("Simulacion: dos liberaciones fisicas sobre el mismo activo no producen reintentos", async () => {
+test("Simulacion: dos liberaciones fisicas sobre el mismo activo no producen reintentos (NFR-2)", async () => {
   let released = false;
   const h = harness((name) => {
     assert.equal(name, "dactivos_release_asset");
@@ -127,7 +127,7 @@ test("Simulacion: dos liberaciones fisicas sobre el mismo activo no producen rei
   assert.equal(h.calls.length, 2);
 });
 
-test("Simulacion: crear dos activos con codigo identico no reintenta violacion UNIQUE", async () => {
+test("Simulacion: crear dos activos con codigo identico no reintenta violacion UNIQUE (NFR-2)", async () => {
   const codes = new Set();
   const h = harness((name, args) => {
     assert.equal(name, "dactivos_create_asset");
@@ -149,7 +149,7 @@ test("Simulacion: crear dos activos con codigo identico no reintenta violacion U
   assert.equal(h.calls.length, 2);
 });
 
-test("Simulacion: dos resoluciones del mismo caso, segunda rechazada", async () => {
+test("Simulacion: dos resoluciones del mismo caso, segunda rechazada (NFR-2)", async () => {
   let resolved = false;
   const h = harness((name) => {
     assert.equal(name, "dactivos_resolve_maintenance");
@@ -164,7 +164,7 @@ test("Simulacion: dos resoluciones del mismo caso, segunda rechazada", async () 
   assert.equal(h.calls.length, 2);
 });
 
-test("Errores 40P01 y 40001 no se muestran como detalles internos ni disparan reintentos", async () => {
+test("Errores 40P01 y 40001 no se muestran como detalles internos ni disparan reintentos (NFR-2)", async () => {
   for (const code of ["40P01", "40001"]) {
     const h = harness((name) => {
       assert.equal(name, "dactivos_return_asset");
@@ -181,7 +181,7 @@ test("Errores 40P01 y 40001 no se muestran como detalles internos ni disparan re
   }
 });
 
-test("Violaciones 23505/23514 y errores imprevistos no exponen SQL interno", async () => {
+test("Violaciones 23505/23514 y errores imprevistos no exponen SQL interno (NFR-2)", async () => {
   for (const code of ["23505", "23514", "P0001", "42501"]) {
     const h = harness((name) => {
       assert.equal(name, "dactivos_update_asset");
@@ -197,7 +197,7 @@ test("Violaciones 23505/23514 y errores imprevistos no exponen SQL interno", asy
   }
 });
 
-test("Sin confirmacion de devolucion fisica nunca se hace RPC", async () => {
+test("Sin confirmacion de devolucion fisica nunca se hace RPC (NFR-2)", async () => {
   const h = harness(() => {
     throw Error("No debe consultar DB");
   });
@@ -206,7 +206,7 @@ test("Sin confirmacion de devolucion fisica nunca se hace RPC", async () => {
   assert.equal(h.calls.length, 0);
 });
 
-test("Sin verificacion fisica no se ejecuta liberacion", async () => {
+test("Sin verificacion fisica no se ejecuta liberacion (NFR-2)", async () => {
   const h = harness(() => {
     throw Error("No debe consultar DB");
   });
@@ -217,7 +217,7 @@ test("Sin verificacion fisica no se ejecuta liberacion", async () => {
   assert.equal(h.calls.length, 0);
 });
 
-test("Permiso SECURITY prohibido: no invoca RPC ni revalida paginas", async () => {
+test("Permiso SECURITY prohibido: no invoca RPC ni revalida paginas (NFR-2)", async () => {
   const h = harness(() => {
     throw Error("No debe consultar DB");
   }, "SECURITY");
@@ -229,7 +229,7 @@ test("Permiso SECURITY prohibido: no invoca RPC ni revalida paginas", async () =
   assert.equal(h.revalidation.length, 0);
 });
 
-test("Ante referencia ambigua no hay movimientos incluso con confirmacion", async () => {
+test("Ante referencia ambigua no hay movimientos incluso con confirmacion (NFR-2)", async () => {
   const h = harness((name) => {
     assert.equal(name, "dactivos_list_assets");
     return ok([

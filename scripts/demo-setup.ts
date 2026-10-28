@@ -1,5 +1,5 @@
 /**
- * Demo access for a local evaluation: `npm run demo:setup`.
+ * Demo access for a local evaluation: `npm run demo:setup` (FR-14, D8).
  *
  * - Creates (or reactivates) one account per role with a generated password that is printed only
  *   once. Running it again issues new passwords.

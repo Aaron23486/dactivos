@@ -19,14 +19,14 @@ function ast(path) {
   return ts.createSourceFile(path, get(path), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 }
 
-test("Seguridad estatica: modulo operacional nunca accede directamente a tablas", () => {
+test("Seguridad estatica: modulo operacional nunca accede directamente a tablas (R1, NFR-1)", () => {
   assert.doesNotMatch(ops, /\.from\s*\(/);
   assert.doesNotMatch(data, /\.from\s*\(/);
 });
-test("Seguridad estatica: server actions tienen bandera use server", () => {
+test("Seguridad estatica: server actions tienen bandera use server (R1, NFR-1)", () => {
   assert.match(ops.slice(0, 150), /["']use server["']/);
 });
-test("Seguridad estatica: funciones exportadas validan, comprueban permiso y usan RPC", () => {
+test("Seguridad estatica: funciones exportadas validan, comprueban permiso y usan RPC (R1, NFR-1)", () => {
   const source = ast("src/app/actions/operations.ts");
   const names = [];
   source.forEachChild((node) => {
@@ -46,16 +46,16 @@ test("Seguridad estatica: funciones exportadas validan, comprueban permiso y usa
   });
   assert.ok(names.length >= 10, `Se esperaban >=10 acciones: ${names.join(",")}`);
 });
-test("Seguridad estatica: requirePermission comprueba identidad, rol y permiso", () => {
+test("Seguridad estatica: requirePermission comprueba identidad, rol y permiso (R1, NFR-1)", () => {
   assert.match(auth, /\.auth\.getUser\(/);
   assert.match(auth, /\.rpc\(["']current_app_role["']\)/);
   assert.match(auth, /hasPermission\s*\(/);
 });
-test("Seguridad estatica: configuracion publica no utiliza claves privilegiadas", () => {
+test("Seguridad estatica: configuracion publica no utiliza claves privilegiadas (R1, NFR-1)", () => {
   assert.match(config, /NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY/);
   assert.doesNotMatch(config, /SERVICE_ROLE|sb_secret_|DATABASE_URL/);
 });
-test("Seguridad estatica: sin claves privilegiadas literales en src", () => {
+test("Seguridad estatica: sin claves privilegiadas literales en src (R1, NFR-1)", () => {
   const sourceFiles = files(resolve(root, "src")).filter((f) => /\.(tsx?|mjs|jsx?)$/.test(f));
   for (const file of sourceFiles) {
     const content = readFileSync(file, "utf8");

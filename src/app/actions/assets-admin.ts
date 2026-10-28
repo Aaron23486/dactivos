@@ -15,6 +15,7 @@ const schema = z.object({
     .refine((s) => !/[\u0000-\u001f\u007f]/.test(s)),
   confirm: z.literal("yes"),
 });
+/** Baja y reactivación administrativas con motivo y registro inmutable (FR-8, R10, R11). */
 export async function changeAssetLifecycle(form: FormData): Promise<OperationResult> {
   await requirePermission("assets.retire");
   const input = schema.safeParse({

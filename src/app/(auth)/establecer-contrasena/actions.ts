@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { isFreshInvitationSession } from "@/lib/auth/invitation-session";
 import { newPasswordSchema } from "@/lib/auth/password-policy";
+import { logSecurityEvent } from "@/lib/security/events";
 import { createClient } from "@/lib/supabase/server";
 
 /** Contraseña de una cuenta invitada; queda inactiva hasta que ADMIN la habilite (FR-11, NFR-1). */
@@ -24,6 +25,10 @@ export async function setInvitedPassword(formData: FormData) {
   // Solo la sesión recién abierta por el enlace de invitación puede fijar la contraseña (SEC-02).
   const { data: session } = await supabase.auth.getClaims();
   if (!isFreshInvitationSession(session?.claims)) {
+    logSecurityEvent("auth.invitation_rejected", {
+      user: user.id,
+      reason: "not_invitation_session",
+    });
     redirect("/login?error=invitation");
   }
 

@@ -4,7 +4,7 @@ Aplicación web interna para handhelds y computadoras. Ciclo: REGISTRAR → DISP
 
 ## Antes de hacer cualquier cosa
 
-1. Lee `docs/requirements.md` (requisitos FR/NFR, reglas R1-R13) y `docs/architecture.md` (principios, modelo de datos, decisiones D1-D12) cuando la tarea los necesite.
+1. Lee `docs/requirements.md` (requisitos FR/NFR, reglas R1-R13) y `docs/architecture.md` (principios, modelo de datos, decisiones D1-D13) cuando la tarea los necesite.
 2. Revisa el ADR correspondiente en `docs/decisions/` antes de cambiar una decisión existente.
 3. Lee `AGENTS.md`: Next.js 16 cambia APIs y convenciones; consulta la guía en `node_modules/next/dist/docs/` antes de escribir código de Next.
 

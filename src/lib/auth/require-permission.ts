@@ -3,6 +3,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { hasPermission, isAppRole, type AppRole, type Permission } from "@/lib/auth/permissions";
+import { logSecurityEvent } from "@/lib/security/events";
 
 export type AuthorizedUser = {
   id: string;
@@ -25,10 +26,12 @@ export async function requirePermission(permission: Permission): Promise<Authori
   const { data: role, error: roleError } = await supabase.rpc("current_app_role");
 
   if (roleError || !isAppRole(role)) {
+    logSecurityEvent("auth.access_denied", { user: user.id, permission, reason: "no_active_role" });
     redirect("/acceso-denegado");
   }
 
   if (!hasPermission(role, permission)) {
+    logSecurityEvent("auth.access_denied", { user: user.id, role, permission });
     redirect("/acceso-denegado");
   }
 

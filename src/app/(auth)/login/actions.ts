@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { loginThrottle } from "@/lib/auth/login-throttle";
+import { emailFingerprint, logSecurityEvent } from "@/lib/security/events";
 import { createClient } from "@/lib/supabase/server";
 
 /** Client IP as reported by the proxy in front of the app; "direct" when there is none. */
@@ -28,7 +29,9 @@ export async function signIn(formData: FormData) {
   }
 
   const normalizedEmail = email.trim().toLowerCase();
-  if (!loginThrottle.allow(await clientIp(), normalizedEmail)) {
+  const ip = await clientIp();
+  if (!loginThrottle.allow(ip, normalizedEmail)) {
+    logSecurityEvent("auth.sign_in_throttled", { email: emailFingerprint(normalizedEmail), ip });
     redirect("/login?error=throttled");
   }
 
@@ -41,6 +44,7 @@ export async function signIn(formData: FormData) {
 
   if (error) {
     loginThrottle.recordFailure(normalizedEmail);
+    logSecurityEvent("auth.sign_in_failed", { email: emailFingerprint(normalizedEmail), ip });
     redirect("/login?error=credentials");
   }
 

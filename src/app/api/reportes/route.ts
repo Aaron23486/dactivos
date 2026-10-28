@@ -2,9 +2,10 @@ import { NextRequest } from "next/server";
 import { requirePermission } from "@/lib/auth/require-permission";
 import { createClient } from "@/lib/supabase/server";
 import { isReportKind, makeCSV, keepDate } from "@/lib/reports/csv";
+import { logSecurityEvent } from "@/lib/security/events";
 /** Exportación CSV para ADMIN, paginada y sin entregar archivos parciales (FR-10). */
 export async function GET(req: NextRequest) {
-  await requirePermission("reports.export");
+  const actor = await requirePermission("reports.export");
   const params = req.nextUrl.searchParams;
   const kind = params.get("tipo") ?? "";
   if (!isReportKind(kind)) return Response.json({ error: "Reporte inválido" }, { status: 400 });
@@ -49,6 +50,24 @@ export async function GET(req: NextRequest) {
       );
     for (const item of data) if (keepDate(item, kind, from, to)) results.push(item);
     if (data.length < limit) break;
+  }
+  // Sin registro de auditoría no hay archivo (FR-10, R11, D13).
+  const { error: auditError } = await supabase.rpc("dactivos_admin_log_report_export", {
+    p_kind: kind,
+    p_date_from: from,
+    p_date_to: to,
+    p_row_count: results.length,
+  });
+  if (auditError) {
+    logSecurityEvent("report.export_blocked", {
+      user: actor.id,
+      kind,
+      code: auditError.code ?? null,
+    });
+    return Response.json(
+      { error: "No fue posible registrar la exportación; no se entregó el archivo." },
+      { status: 503 },
+    );
   }
   return new Response(makeCSV(kind, results), {
     status: 200,

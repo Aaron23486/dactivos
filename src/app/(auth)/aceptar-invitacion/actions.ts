@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { logSecurityEvent } from "@/lib/security/events";
 import { createClient } from "@/lib/supabase/server";
 
 /** El token solo se consume al pulsar «Aceptar invitación» (FR-11, D6). */
@@ -27,6 +28,7 @@ export async function acceptInvitation(formData: FormData) {
   });
 
   if (error) {
+    logSecurityEvent("auth.invitation_rejected", { reason: error.code ?? "invalid_token" });
     redirect("/login?error=invitation");
   }
 

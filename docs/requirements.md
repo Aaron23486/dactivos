@@ -67,9 +67,9 @@ The operating cycle of an asset is:
 
 **FR-8 — Retirement and reactivation.** An administrator retires an available asset or reactivates a retired one, with a reason of 10 to 500 characters and explicit confirmation. A retired asset cannot be delivered.
 
-**FR-9 — History.** A paginated history combines deliveries, returns, maintenance, catalog changes, account changes and retirements, with the actor, date and reason where there is one. Security sees deliveries and maintenance of assets that are not retired; administrators see everything.
+**FR-9 — History.** A paginated history combines deliveries, returns, maintenance, catalog changes, account changes, retirements and CSV exports, with the actor, date and reason where there is one. Security sees deliveries and maintenance of assets that are not retired; administrators see everything.
 
-**FR-10 — Reports.** Administrators export CSV files of assets, employees, deliveries and maintenance cases, optionally filtered by a date range. Files open correctly in Excel (UTF-8 with BOM, `;` separator) and cells cannot run spreadsheet formulas.
+**FR-10 — Reports.** Administrators export CSV files of assets, employees, deliveries and maintenance cases, optionally filtered by a date range. Files open correctly in Excel (UTF-8 with BOM, `;` separator) and cells cannot run spreadsheet formulas. Every export is recorded (who, which report, which range, how many rows) before the file is delivered.
 
 **FR-11 — Account invitation and administration.** An administrator invites a person by email with a role and a reason. The person accepts the invitation, sets a password and keeps an **inactive** profile until an administrator activates it. Administrators change the role or status of other accounts with a reason; they cannot change their own account, and the last active administrator cannot be removed.
 

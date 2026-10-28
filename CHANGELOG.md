@@ -9,6 +9,8 @@ Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semve
 - **Changed** code comments and test names to cite the requirement, rule and decision IDs they implement or cover; added `CLAUDE.md` with the project rules and commands.
 - **Security** session hardening after the pre-production review ([ADR 0012](docs/decisions/0012-session-hardening.md)): the session cookie is `httpOnly`, `Secure` in production and lasts 12 hours instead of 400 days; Auth ends sessions after 12 hours or 4 hours idle; signing out also ends access for a copied token; the password page only serves the session opened by an invitation, and Auth requires a recent sign-in to change a password.
 - **Fixed** the README and the architecture and security documents, which described the session cookie as `httpOnly` before it was.
+- **Security** security events (failed and throttled sign-ins, denied access, rejected invitation links) logged as JSON lines without passwords, tokens or emails in clear ([ADR 0013](docs/decisions/0013-security-events-and-export-audit.md)).
+- **Added** an append-only audit of CSV exports: who exported which report, range and rows, recorded before the file is delivered and shown in the history as `REPORTE`.
 
 ## [1.0.0] — 2026-10-27
 

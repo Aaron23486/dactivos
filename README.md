@@ -48,8 +48,8 @@ The screenshots come from a local installation with fictitious data.
 - **Returns with physical inspection:** good or damaged. A damaged return moves the asset to maintenance and opens a case automatically.
 - **Maintenance:** resolving a case does not release the device; a separate physical check does, and each check releases it only once.
 - **Retirement and reactivation** by administrators, with a mandatory reason and an immutable log.
-- **History** of deliveries, maintenance, catalog changes, account changes and retirements, filtered by role.
-- **CSV reports** of assets, employees, deliveries and maintenance, ready for Excel and protected against spreadsheet formulas.
+- **History** of deliveries, maintenance, catalog changes, account changes, retirements and CSV exports, filtered by role.
+- **CSV reports** of assets, employees, deliveries and maintenance, ready for Excel, protected against spreadsheet formulas, and recorded in the history before the file is delivered.
 - **Accounts:** administrators invite people by email; invited accounts start inactive until an administrator enables them. Terminal commands cover the first administrator and recovery.
 - **Dashboard** with counts by status, open cases, devices waiting for release and recent movements; a value that could not be read is shown as unavailable, never as zero.
 
@@ -205,7 +205,7 @@ npm run test:integration    # against the local Supabase (requires db:up)
 npm run check               # formatting, types, lint, tests and build in sequence
 ```
 
-- **133 automated tests:** 66 unit, 45 source checks and 22 integration tests against a real database. The integration tests check every table and administrative function per role, the inventory rules, simultaneous deliveries and account changes.
+- **140 automated tests:** 68 unit, 48 source checks and 24 integration tests against a real database. The integration tests check every table and administrative function per role, the inventory rules, simultaneous deliveries and account changes.
 - Which test covers each requirement and rule: [`docs/testing.md`](docs/testing.md).
 - **CI (GitHub Actions)** on every pull request: formatting, lint, types, tests, build, the migrations on an empty database with `demo:setup` and the integration tests, `npm audit` and gitleaks secret scanning over the whole history. Actions are pinned by commit, and Dependabot proposes weekly updates as reviewable pull requests ([ADR 0011](docs/decisions/0011-supply-chain-in-ci.md)). CodeQL also analyzes every pull request, and `main` only accepts pull requests whose checks pass.
 
@@ -217,6 +217,7 @@ npm run check               # formatting, types, lint, tests and build in sequen
 - Passwords of 12 to 72 characters with letters and digits; generic sign-in errors; sign-in limits per client IP and per email.
 - Invitation tokens consumed only on an explicit action; invited accounts start inactive.
 - Input validated on the server and again in the database; errors without SQL details; CSV cells protected against formulas.
+- Security events (failed and throttled sign-ins, denied access, rejected invitation links) logged without passwords, tokens or emails in clear; every CSV export audited ([ADR 0013](docs/decisions/0013-security-events-and-export-audit.md)).
 - Security headers with a Content Security Policy, `frame-ancestors 'none'` and HSTS in production.
 - No known high or critical vulnerabilities in dependencies; one low-severity advisory affects a development tool and has no fix yet (see [`docs/security.md`](docs/security.md#known-limitations)). CI audits dependencies and scans the history for secrets.
 

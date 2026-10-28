@@ -84,6 +84,7 @@ auth.users 1──0..1 profiles (role, is_active)
 | `asset_release_consumptions` | Marks a validation as used, so it releases the asset only once                           |
 | `profiles`                   | Role and status of each Auth account                                                     |
 | `*_audit_log`, `asset_lifecycle_log` | Deliveries, maintenance, catalog changes, account changes, retirements           |
+| `report_export_log`          | Who exported which CSV report, with its date range and row count; append-only            |
 
 Rules enforced by the database:
 
@@ -134,3 +135,4 @@ The schema is in two migrations: `20261013000000_initial_schema.sql` (the applic
 | D10 | Sign-in throttling per client IP and per email in the app                                    | [0010](decisions/0010-sign-in-throttling.md)                        |
 | D11 | Dependency audit, secret scanning and reviewed Dependabot updates in CI                      | [0011](decisions/0011-supply-chain-in-ci.md)                        |
 | D12 | Hardened session cookie, live-session role check and password creation only after an invitation | [0012](decisions/0012-session-hardening.md)                     |
+| D13 | Security events in the server log; every CSV export audited before the file is delivered     | [0013](decisions/0013-security-events-and-export-audit.md)      |

@@ -49,6 +49,10 @@ const ADMIN_ONLY: [string, Record<string, unknown>][] = [
     { p_user_id: NIL, p_role: "SECURITY", p_reason: "Prueba de autorización" },
   ],
   ["dactivos_create_department", { p_code: "NO_PERMITIDO", p_name: "No permitido" }],
+  [
+    "dactivos_admin_log_report_export",
+    { p_kind: "employees", p_date_from: null, p_date_to: null, p_row_count: 0 },
+  ],
   ["dactivos_set_department_active", { p_department_id: NIL, p_is_active: false }],
 ];
 
@@ -119,7 +123,7 @@ describe("SECURITY role (FR-1, R1)", () => {
         .data,
     );
     const sources = new Set(events.map((e) => e.source));
-    for (const hidden of ["ADMINISTRACION", "OPERATIVO", "CICLO_VIDA"]) {
+    for (const hidden of ["ADMINISTRACION", "OPERATIVO", "CICLO_VIDA", "REPORTE"]) {
       assert.ok(!sources.has(hidden), `${hidden} must be hidden from SECURITY`);
     }
   });

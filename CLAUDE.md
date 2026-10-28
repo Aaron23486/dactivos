@@ -13,7 +13,7 @@ Si hay conflicto o falta información: pregunta. No asumas requisitos.
 
 ## Estado
 
-Versión **1.0.0** (2026-10-27), repositorio público. README y `docs/` en inglés; la interfaz y este archivo siguen en español a propósito. Historial en `CHANGELOG.md`. `main` protegida: todo cambio entra por PR con `checks`, `supply-chain` e `integration` en verde.
+Versión **1.1.0** (2026-10-28), repositorio público. README y `docs/` en inglés; la interfaz y este archivo siguen en español a propósito. Historial en `CHANGELOG.md`. `main` protegida: todo cambio entra por PR con `checks`, `supply-chain` e `integration` en verde.
 Cambios nuevos: documentar primero en `docs/requirements.md`, `docs/architecture.md` o un ADR nuevo, y agregar sus pruebas a `docs/testing.md`. Las referencias en código y en los nombres de las pruebas usan los IDs estables (FR-n, NFR-n, Rn, Dn).
 
 ## Reglas críticas (nunca violar)

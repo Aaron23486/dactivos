@@ -2,18 +2,20 @@
 
 Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semver.org/); before 1.0.0 the work is grouped by stage.
 
-## [Unreleased]
+## [1.1.0] — 2026-10-28
 
-- **Security** the repository is public with `main` protected (pull requests with the `checks`, `supply-chain` and `integration` jobs passing), GitHub secret scanning with push protection, CodeQL, Dependabot security updates and private vulnerability reporting.
-- **Changed** the integration tests to build their run prefix with `crypto.randomInt` (CodeQL `js/insecure-randomness`).
-- **Changed** code comments and test names to cite the requirement, rule and decision IDs they implement or cover; added `CLAUDE.md` with the project rules and commands.
-- **Security** session hardening after the pre-production review ([ADR 0012](docs/decisions/0012-session-hardening.md)): the session cookie is `httpOnly`, `Secure` in production and lasts 12 hours instead of 400 days; Auth ends sessions after 12 hours or 4 hours idle; signing out also ends access for a copied token; the password page only serves the session opened by an invitation, and Auth requires a recent sign-in to change a password.
-- **Fixed** the README and the architecture and security documents, which described the session cookie as `httpOnly` before it was.
+Security fixes from a pre-production review (no critical or high findings; 2 medium, 6 low, 5 informational), an audit of CSV exports, and the public repository protections.
+
+- **Security** session hardening ([ADR 0012](docs/decisions/0012-session-hardening.md)): the session cookie is `httpOnly`, `Secure` in production and lasts 12 hours instead of 400 days; Auth ends sessions after 12 hours or 4 hours idle; signing out also ends access for a copied token; the password page only serves the session opened by an invitation, and Auth requires a recent sign-in to change a password.
 - **Security** security events (failed and throttled sign-ins, denied access, rejected invitation links) logged as JSON lines without passwords, tokens or emails in clear ([ADR 0013](docs/decisions/0013-security-events-and-export-audit.md)).
 - **Security** password-recovery and magic-link emails, which the app does not use, no longer carry a link or token; Auth sends at most one email per address and minute. The security document now covers direct Auth API calls, the local Supabase listening on every interface, and GraphQL on hosted projects.
-- **Added** to the README how to open Supabase Studio and connect a PostgreSQL client to the local database.
-- **Changed** CI to retry starting the local Supabase when the image registry refuses downloads, and the unit-test module loader to allow 10 seconds instead of 2, which failed correct tests on a busy machine.
+- **Security** the repository is public with `main` protected (pull requests with the `checks`, `supply-chain` and `integration` jobs passing), GitHub secret scanning with push protection, CodeQL, Dependabot security updates and private vulnerability reporting.
 - **Added** an append-only audit of CSV exports: who exported which report, range and rows, recorded before the file is delivered and shown in the history as `REPORTE`.
+- **Added** to the README how to open Supabase Studio and connect a PostgreSQL client to the local database.
+- **Added** `CLAUDE.md` with the project rules and commands; code comments and test names cite the requirement, rule and decision IDs they implement or cover.
+- **Changed** CI to retry starting the local Supabase when the image registry refuses downloads, and the unit-test module loader to allow 10 seconds instead of 2, which failed correct tests on a busy machine.
+- **Changed** the integration tests to build their run prefix with `crypto.randomInt` (CodeQL `js/insecure-randomness`).
+- **Fixed** the README and the architecture and security documents, which described the session cookie as `httpOnly` before it was.
 
 ## [1.0.0] — 2026-10-27
 

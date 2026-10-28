@@ -6,6 +6,7 @@ Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semve
 
 - **Security** the repository is public with `main` protected (pull requests with the `checks`, `supply-chain` and `integration` jobs passing), GitHub secret scanning with push protection, CodeQL, Dependabot security updates and private vulnerability reporting.
 - **Changed** the integration tests to build their run prefix with `crypto.randomInt` (CodeQL `js/insecure-randomness`).
+- **Changed** code comments and test names to cite the requirement, rule and decision IDs they implement or cover; added `CLAUDE.md` with the project rules and commands.
 
 ## [1.0.0] — 2026-10-27
 

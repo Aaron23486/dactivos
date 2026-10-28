@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
+/** El token solo se consume al pulsar «Aceptar invitación» (FR-11, D6). */
 export async function acceptInvitation(formData: FormData) {
   const token = formData.get("token_hash");
   const type = formData.get("type");

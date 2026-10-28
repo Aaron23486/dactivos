@@ -17,7 +17,7 @@ function fn(name) {
   );
 }
 
-test("Configuración Instant: parseo y shell sin operaciones dinámicas", () => {
+test("Configuración Instant: parseo y shell sin operaciones dinámicas (FR-1)", () => {
   assert.equal(syntax.parseDiagnostics.length, 0);
   const page = fn("Page");
   assert.ok(page);
@@ -29,7 +29,7 @@ test("Configuración Instant: parseo y shell sin operaciones dinámicas", () => 
   assert.doesNotMatch(body, /await\s+(?:connection|searchParams)\b/);
 });
 
-test("Configuración Instant: conexión y permiso ADMIN dentro del contenido suspendido", () => {
+test("Configuración Instant: conexión y permiso ADMIN dentro del contenido suspendido (FR-1)", () => {
   const content = fn("ConfigurationContent");
   assert.ok(content);
   const body = content.body.getText(syntax);
@@ -41,7 +41,7 @@ test("Configuración Instant: conexión y permiso ADMIN dentro del contenido sus
   assert.ok(body.indexOf("await requirePermission") < body.indexOf("loadCategories()"));
 });
 
-test("Configuración Instant: no lee datos antes del límite Suspense", async () => {
+test("Configuración Instant: no lee datos antes del límite Suspense (FR-1)", async () => {
   const result = ts.transpileModule(source, {
     fileName: file,
     reportDiagnostics: true,
@@ -121,7 +121,7 @@ function walk(directory) {
   });
 }
 
-test("Auditoría: todas las rutas dejan URL/conexión en componentes suspendidos", () => {
+test("Auditoría: todas las rutas dejan URL/conexión en componentes suspendidos (FR-1)", () => {
   const appRoot = resolve(root, "src/app");
   const files = walk(appRoot);
   assert.ok(files.length >= 15, "Cobertura mínima de páginas y layouts");

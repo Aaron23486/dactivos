@@ -28,7 +28,7 @@ async function openAssignmentId(client: TestUser["client"], assetId: string): Pr
   return String(open.id);
 }
 
-test("an asset can only be delivered once until it is returned", async () => {
+test("an asset can only be delivered once until it is returned (FR-5, R2)", async () => {
   const f = await createFixture(adminUser.client, "ONCE");
   const hh = f.asset("HH1");
   await ok(security.client, "dactivos_assign_asset", {
@@ -51,7 +51,7 @@ test("an asset can only be delivered once until it is returned", async () => {
   assert.equal(await assetStatus(security.client, hh), "AVAILABLE");
 });
 
-test("an employee holds at most one open asset per category", async () => {
+test("an employee holds at most one open asset per category (R3)", async () => {
   const f = await createFixture(adminUser.client, "CATEGORY", { employees: 1, computers: 1 });
   await ok(security.client, "dactivos_assign_asset", {
     p_asset_id: f.asset("HH1"),
@@ -70,7 +70,7 @@ test("an employee holds at most one open asset per category", async () => {
   });
 });
 
-test("a damaged return goes to maintenance and needs resolution and a physical check", async () => {
+test("a damaged return goes to maintenance and needs resolution and a physical check (FR-6, FR-7, R5–R7)", async () => {
   const f = await createFixture(adminUser.client, "DAMAGED", { employees: 1, handhelds: 1 });
   const hh = f.asset("HH1");
   await ok(security.client, "dactivos_assign_asset", {
@@ -109,7 +109,7 @@ test("a damaged return goes to maintenance and needs resolution and a physical c
   assert.equal(await assetStatus(security.client, hh), "AVAILABLE");
 });
 
-test("only an available asset can be retired, and the retirement is audited and immutable", async () => {
+test("only an available asset can be retired, and the retirement is audited and immutable (FR-8, R5, R11)", async () => {
   const f = await createFixture(adminUser.client, "RETIRE", { employees: 1, handhelds: 2 });
   await ok(adminUser.client, "dactivos_assign_asset", {
     p_asset_id: f.asset("HH2"),
@@ -160,7 +160,7 @@ test("only an available asset can be retired, and the retirement is audited and 
   assert.equal(await assetStatus(adminUser.client, hh), "AVAILABLE");
 });
 
-test("invalid input is rejected by the database, not only by the forms", async () => {
+test("invalid input is rejected by the database, not only by the forms (R8, R10)", async () => {
   const f = await createFixture(adminUser.client, "INPUT", { employees: 1, handhelds: 1 });
   const duplicate = await call(security.client, "dactivos_create_asset", {
     p_internal_code: `${f.prefix}-hh1`,

@@ -4,10 +4,10 @@ import { loadLocalTs } from "../helpers/load-ts.mjs";
 
 const p = loadLocalTs("src/lib/auth/permissions.ts");
 
-test("RBAC: ADMIN recibe los permisos catalogados", () => {
+test("RBAC: ADMIN recibe los permisos catalogados (FR-1)", () => {
   assert.deepEqual(Array.from(p.ROLE_PERMISSIONS.ADMIN), Array.from(p.PERMISSIONS));
 });
-test("RBAC: SECURITY conserva permisos operativos", () => {
+test("RBAC: SECURITY conserva permisos operativos (FR-1)", () => {
   for (const permission of [
     "assets.read",
     "employees.create",
@@ -20,7 +20,7 @@ test("RBAC: SECURITY conserva permisos operativos", () => {
     assert.equal(p.hasPermission("SECURITY", permission), true, permission);
   }
 });
-test("RBAC: SECURITY no administra ni exporta", () => {
+test("RBAC: SECURITY no administra ni exporta (FR-1)", () => {
   for (const permission of [
     "departments.manage",
     "users.manage",
@@ -33,13 +33,13 @@ test("RBAC: SECURITY no administra ni exporta", () => {
     assert.equal(p.hasPermission("SECURITY", permission), false, permission);
   }
 });
-test("RBAC: perfiles nulos, desconocidos o falsificados son rechazados", () => {
+test("RBAC: perfiles nulos, desconocidos o falsificados son rechazados (FR-1)", () => {
   for (const role of [null, undefined, "admin", "USER", "", { role: "ADMIN" }, 1]) {
     assert.equal(p.isAppRole(role), false);
     assert.equal(p.hasPermission(role, "assets.read"), false);
   }
 });
-test("RBAC: catalogos sin permisos duplicados y sin accesos inesperados", () => {
+test("RBAC: catalogos sin permisos duplicados y sin accesos inesperados (FR-1)", () => {
   assert.equal(new Set(Array.from(p.PERMISSIONS)).size, p.PERMISSIONS.length);
   assert.equal(
     new Set(Array.from(p.ROLE_PERMISSIONS.SECURITY)).size,

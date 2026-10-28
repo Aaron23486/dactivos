@@ -12,6 +12,8 @@ How DACTIVOS is tested, how to run each level, and which tests cover each rule.
 
 All tests use Node's built-in runner (`node:test`). Unit and source tests need nothing running. Integration tests need the local Supabase (`npm run db:up`); each run creates its own accounts and records with a unique `T…` prefix and never changes the demo data. `npm run db:reset` returns the local database to an empty state.
 
+Every test name ends with the requirement, rule or decision IDs it covers, for example `(FR-5, R2)`, and the code comments of each operation cite the same IDs, so a rule can be followed from the requirements to the code and its tests.
+
 Static checks: `npm run format:check`, `npm run lint`, `npm run typecheck`. `npm run check` runs formatting, types, lint, unit and source tests and the build in sequence.
 
 CI runs every level on each pull request ([ADR 0011](decisions/0011-supply-chain-in-ci.md)): `checks` (static checks, unit and source tests, build), `integration` (migrations on an empty database, `demo:setup`, integration tests) and `supply-chain` (dependency audit and secret scan).

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 const read = (path) => readFileSync(path, "utf8");
 
-test("Invitación: aceptación manual antes de consumir el token", () => {
+test("Invitación: aceptación manual antes de consumir el token (FR-11, D6)", () => {
   const page = read("src/app/(auth)/aceptar-invitacion/page.tsx");
   const action = read("src/app/(auth)/aceptar-invitacion/actions.ts");
   assert.match(page, /<form action=\{acceptInvitation\}/);
@@ -15,7 +15,7 @@ test("Invitación: aceptación manual antes de consumir el token", () => {
   assert.match(action, /redirect\("\/establecer-contrasena"\)/);
 });
 
-test("Contraseña: sesión comprobada y cierre de sesión al finalizar", () => {
+test("Contraseña: sesión comprobada y cierre de sesión al finalizar (FR-11, D6)", () => {
   const page = read("src/app/(auth)/establecer-contrasena/page.tsx");
   const action = read("src/app/(auth)/establecer-contrasena/actions.ts");
   assert.match(page, /await connection\(\)/);
@@ -27,7 +27,7 @@ test("Contraseña: sesión comprobada y cierre de sesión al finalizar", () => {
   assert.match(action, /await supabase\.auth\.signOut\(\)/);
 });
 
-test("Solo usa SDK Auth y no inserta usuarios ni cambia permisos", () => {
+test("Solo usa SDK Auth y no inserta usuarios ni cambia permisos (FR-11, D6)", () => {
   for (const path of [
     "src/app/(auth)/aceptar-invitacion/actions.ts",
     "src/app/(auth)/establecer-contrasena/actions.ts",
@@ -37,7 +37,7 @@ test("Solo usa SDK Auth y no inserta usuarios ni cambia permisos", () => {
   }
 });
 
-test("Invitación: la plantilla de correo envía el token hash, no un enlace que lo consuma", () => {
+test("Invitación: la plantilla de correo envía el token hash, no un enlace que lo consuma (FR-11, D6)", () => {
   const template = read("supabase/templates/invite.html");
   assert.match(template, /\/aceptar-invitacion\?token_hash=\{\{ \.TokenHash \}\}/);
   assert.match(template, /type=invite/);

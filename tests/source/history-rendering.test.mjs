@@ -18,7 +18,7 @@ function findFunction(name) {
   );
 }
 
-test("Instant: Page es sincronica y no consume URL antes de Suspense", () => {
+test("Instant: Page es sincronica y no consume URL antes de Suspense (FR-9)", () => {
   assert.equal(parsed.parseDiagnostics.length, 0, "TSX parseable");
   const page = findFunction("Page");
   assert.ok(page, "Pagina existe");
@@ -28,7 +28,7 @@ test("Instant: Page es sincronica y no consume URL antes de Suspense", () => {
   assert.match(nodeText(page.body), /<HistoryContent\s+searchParams=\{searchParams\}/);
 });
 
-test("Instant: la lectura de searchParams y la autorización quedan en contenido suspendido", () => {
+test("Instant: la lectura de searchParams y la autorización quedan en contenido suspendido (FR-9)", () => {
   const content = findFunction("HistoryContent");
   assert.ok(content);
   const body = nodeText(content.body);
@@ -94,7 +94,7 @@ function loadWithMocks() {
   return { Page: commonJsModule.exports.default, Suspense, HistoryBoard, logs };
 }
 
-test("Instant: paginación exacta y lectura diferida por cada solicitud", async () => {
+test("Instant: paginación exacta y lectura diferida por cada solicitud (FR-9)", async () => {
   for (const [rawPage, expected] of [
     ["1", 0],
     ["2", 100],

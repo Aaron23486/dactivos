@@ -1,3 +1,4 @@
+/** Roles y permisos del servidor (FR-1); la base de datos vuelve a comprobar cada rol (R1). */
 export const ROLES = ["ADMIN", "SECURITY"] as const;
 
 export type AppRole = (typeof ROLES)[number];

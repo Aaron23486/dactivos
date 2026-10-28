@@ -1,3 +1,4 @@
+/** Reportes CSV: BOM UTF-8, separador «;» y celdas que no ejecutan fórmulas (FR-10). */
 export const REPORTS = ["assets", "employees", "assignments", "maintenance"] as const;
 export type ReportKind = (typeof REPORTS)[number];
 export function isReportKind(s: string): s is ReportKind {

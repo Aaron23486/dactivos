@@ -9,6 +9,7 @@ export type AuthorizedUser = {
   role: AppRole;
 };
 
+/** Identidad desde Auth y rol desde la base en cada solicitud (FR-1, R1, R13). */
 export async function requirePermission(permission: Permission): Promise<AuthorizedUser> {
   const supabase = await createClient();
 

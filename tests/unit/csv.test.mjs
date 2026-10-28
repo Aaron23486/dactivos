@@ -10,7 +10,7 @@ const code = ts.transpileModule(readFileSync("src/lib/reports/csv.ts", "utf8"), 
 }).outputText;
 const exports = {};
 vm.runInNewContext(code, { exports });
-test("CSV incluye BOM, escapa separadores y evita formulas", () => {
+test("CSV incluye BOM, escapa separadores y evita formulas (FR-10)", () => {
   const s = exports.makeCSV("assets", [
     {
       internal_code: '=HYPERLINK("evil")',
@@ -26,7 +26,7 @@ test("CSV incluye BOM, escapa separadores y evita formulas", () => {
   assert.ok(s.includes('"A;B"'));
   assert.ok(s.includes('"Test\nLine"'));
 });
-test("Fecha UTC filtra rangos inclusivos correctamente", () => {
+test("Fecha UTC filtra rangos inclusivos correctamente (FR-10)", () => {
   assert.equal(
     exports.keepDate({ created_at: "2026-10-11T23:59:59Z" }, "assets", "2026-10-11", "2026-10-11"),
     true,

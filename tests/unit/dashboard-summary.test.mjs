@@ -24,7 +24,7 @@ const maintenance = (id, asset_id, status, opened_at, resolved_at = null) => ({
 const base = { assets: [], assignments: [], cases: [], employees: [] };
 
 // Las comparaciones de objetos VM se hacen por campos individuales.
-test("Dashboard: cuatro estados calculados con datos visibles, sin crear valores ficticios", () => {
+test("Dashboard: cuatro estados calculados con datos visibles, sin crear valores ficticios (FR-13)", () => {
   const s = summarizeDashboard({
     ...base,
     assets: [
@@ -42,7 +42,7 @@ test("Dashboard: cuatro estados calculados con datos visibles, sin crear valores
   assert.equal(s.unknownStatuses, 0);
 });
 
-test("Dashboard: lecturas fallidas se representan con null, nunca cero", () => {
+test("Dashboard: lecturas fallidas se representan con null, nunca cero (FR-13)", () => {
   const s = summarizeDashboard({ assets: null, assignments: null, cases: null, employees: null });
   assert.equal(s.total, null);
   assert.equal(s.available, null);
@@ -52,7 +52,7 @@ test("Dashboard: lecturas fallidas se representan con null, nunca cero", () => {
   assert.equal(s.recent, null);
 });
 
-test("Dashboard: liberacion solamente cuando todos los casos estan resueltos y no hay entrega abierta", () => {
+test("Dashboard: liberacion solamente cuando todos los casos estan resueltos y no hay entrega abierta (FR-13)", () => {
   const s = summarizeDashboard({
     ...base,
     assets: [asset("a", "MAINTENANCE"), asset("b", "MAINTENANCE"), asset("c", "MAINTENANCE")],
@@ -68,12 +68,12 @@ test("Dashboard: liberacion solamente cuando todos los casos estan resueltos y n
   assert.equal(s.openCases, 1);
 });
 
-test("Dashboard: sin datos para evaluar liberacion no inventa resultado", () => {
+test("Dashboard: sin datos para evaluar liberacion no inventa resultado (FR-13)", () => {
   const s = summarizeDashboard({ ...base, assignments: null });
   assert.equal(s.pendingRelease, null);
 });
 
-test("Dashboard: eventos ordenados por fecha, retorno distinto a entrega y limite 8", () => {
+test("Dashboard: eventos ordenados por fecha, retorno distinto a entrega y limite 8 (FR-13)", () => {
   const s = summarizeDashboard({
     ...base,
     assignments: [assignment("a", "a", "2026-10-01T10:00:00Z", "2026-10-04T10:00:00Z")],
@@ -86,12 +86,12 @@ test("Dashboard: eventos ordenados por fecha, retorno distinto a entrega y limit
   assert.equal(s.recent[3].kind, "assignment");
 });
 
-test("Dashboard: fechas invalidas no figuran en actividad", () => {
+test("Dashboard: fechas invalidas no figuran en actividad (FR-13)", () => {
   const s = summarizeDashboard({ ...base, assignments: [assignment("broken", "a", "not-a-date")] });
   assert.equal(s.recent.length, 0);
 });
 
-test("Dashboard: movimiento sin lectura de asignaciones pero con mantenimiento es parcial", () => {
+test("Dashboard: movimiento sin lectura de asignaciones pero con mantenimiento es parcial (FR-13)", () => {
   const s = summarizeDashboard({
     ...base,
     assignments: null,
@@ -101,7 +101,7 @@ test("Dashboard: movimiento sin lectura de asignaciones pero con mantenimiento e
   assert.equal(s.recent[0].kind, "maintenance");
 });
 
-test("Dashboard: empleado activo se cuenta solamente si is_active === true", () => {
+test("Dashboard: empleado activo se cuenta solamente si is_active === true (FR-13)", () => {
   const s = summarizeDashboard({
     ...base,
     employees: [{ is_active: true }, { is_active: false }, { is_active: "true" }],
@@ -109,14 +109,14 @@ test("Dashboard: empleado activo se cuenta solamente si is_active === true", () 
   assert.equal(s.activeEmployees, 1);
 });
 
-test("Dashboard: estados desconocidos se declaran y no contaminan los conocidos", () => {
+test("Dashboard: estados desconocidos se declaran y no contaminan los conocidos (FR-13)", () => {
   const s = summarizeDashboard({ ...base, assets: [asset("x", "UNKNOWN")] });
   assert.equal(s.unknownStatuses, 1);
   assert.equal(s.available, 0);
   assert.equal(s.total, 1);
 });
 
-test("Dashboard: listas en limite de 500 se señalan como potencialmente parciales", () => {
+test("Dashboard: listas en limite de 500 se señalan como potencialmente parciales (FR-13)", () => {
   const s = summarizeDashboard({
     ...base,
     assignments: Array.from({ length: 500 }, (_, i) =>

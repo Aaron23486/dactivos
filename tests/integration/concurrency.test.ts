@@ -13,7 +13,7 @@ before(async () => {
   operators = await Promise.all(Array.from({ length: 4 }, () => createUser("SECURITY")));
 });
 
-test("simultaneous deliveries of the same asset: exactly one succeeds", async () => {
+test("simultaneous deliveries of the same asset: exactly one succeeds (R2, NFR-2)", async () => {
   const f = await createFixture(adminUser.client, "RACE", { employees: 4, handhelds: 1 });
   const hh = f.asset("HH1");
 
@@ -37,7 +37,7 @@ test("simultaneous deliveries of the same asset: exactly one succeeds", async ()
   assert.equal(open.length, 1);
 });
 
-test("simultaneous creation of the same internal code: exactly one asset is created", async () => {
+test("simultaneous creation of the same internal code: exactly one asset is created (R8, NFR-2)", async () => {
   const f = await createFixture(adminUser.client, "DUPCODE", { employees: 0, handhelds: 0 });
   const code = `${f.prefix}-SAME`;
   const results = await Promise.all(

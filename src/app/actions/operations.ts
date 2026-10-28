@@ -104,6 +104,7 @@ const invalid: OperationResult = {
   message: "Revisa los campos: algunos valores están vacíos o exceden los límites permitidos.",
 };
 
+/** Alta de activo: nace disponible y su estado no se elige a mano (FR-2, R8). */
 export async function createAsset(form: FormData): Promise<OperationResult> {
   const input = validate(
     assetCreate.safeParse(
@@ -119,6 +120,7 @@ export async function createAsset(form: FormData): Promise<OperationResult> {
     p_description: input.description,
   });
 }
+/** Edición del nombre y la descripción de un activo (FR-2). */
 export async function updateAsset(form: FormData): Promise<OperationResult> {
   const input = validate(assetUpdate.safeParse(values(form, ["id", "name", "description"])));
   if (!input) return invalid;
@@ -128,6 +130,7 @@ export async function updateAsset(form: FormData): Promise<OperationResult> {
     p_description: input.description,
   });
 }
+/** Alta de empleado en un departamento activo (FR-4, R8). */
 export async function createEmployee(form: FormData): Promise<OperationResult> {
   const input = validate(
     employeeCreate.safeParse(values(form, ["employee_code", "full_name", "department_id"])),
@@ -139,6 +142,7 @@ export async function createEmployee(form: FormData): Promise<OperationResult> {
     p_department_id: input.department_id,
   });
 }
+/** Edición del nombre y el departamento de un empleado (FR-4). */
 export async function updateEmployee(form: FormData): Promise<OperationResult> {
   const input = validate(
     employeeUpdate.safeParse(values(form, ["id", "full_name", "department_id"])),
@@ -150,6 +154,7 @@ export async function updateEmployee(form: FormData): Promise<OperationResult> {
     p_department_id: input.department_id,
   });
 }
+/** Entrega de un activo disponible a un empleado activo (FR-5, R2–R4). */
 export async function assignAsset(form: FormData): Promise<OperationResult> {
   const input = validate(
     assignSchema.safeParse(values(form, ["asset_ref", "employee_id", "notes"])),
@@ -178,6 +183,7 @@ export async function assignAsset(form: FormData): Promise<OperationResult> {
     p_notes: input.notes || null,
   });
 }
+/** Devolución con inspección física; si está dañado abre mantenimiento (FR-6, R6). */
 export async function returnAsset(form: FormData): Promise<OperationResult> {
   const input = validate(returnSchema.safeParse(values(form, ["id", "condition", "notes"])));
   if (!input || (input.condition === "DAMAGED" && input.notes.length < 10)) return invalid;
@@ -189,6 +195,7 @@ export async function returnAsset(form: FormData): Promise<OperationResult> {
     p_notes: input.notes || null,
   });
 }
+/** Resolución de un caso de mantenimiento; no libera el equipo (FR-7). */
 export async function resolveMaintenance(form: FormData): Promise<OperationResult> {
   const input = validate(resolveSchema.safeParse(values(form, ["id", "notes"])));
   if (!input || form.get("confirm") !== "yes") return invalid;
@@ -197,6 +204,7 @@ export async function resolveMaintenance(form: FormData): Promise<OperationResul
     p_resolution_notes: input.notes,
   });
 }
+/** Liberación tras la revisión física de un caso resuelto (FR-7, R7). */
 export async function releaseAsset(form: FormData): Promise<OperationResult> {
   const input = validate(releaseSchema.safeParse(values(form, ["id", "notes", "physical"])));
   if (!input || form.get("confirm") !== "yes") return invalid;
@@ -207,7 +215,7 @@ export async function releaseAsset(form: FormData): Promise<OperationResult> {
   });
 }
 
-// Gestion de departamentos: ADMIN exclusivamente, verificado tambien por PostgreSQL.
+// Gestion de departamentos: ADMIN exclusivamente, verificado tambien por PostgreSQL (FR-1, FR-4, R9).
 export async function createDepartment(form: FormData): Promise<OperationResult> {
   const input = validate(departmentCreate.safeParse(values(form, ["code", "name"])));
   if (!input) return invalid;

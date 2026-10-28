@@ -9,6 +9,7 @@ import {
   parseMaintenance,
 } from "@/lib/operations/contracts";
 
+/** Lecturas de inventario por RPC; los errores SQL no llegan al navegador (R1). */
 type DbError = { code?: string; message: string };
 function publicReadError(source: string, error: DbError | null): string | null {
   if (!error) return null;

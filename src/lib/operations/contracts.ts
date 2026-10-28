@@ -1,3 +1,4 @@
+/** Contratos de las RPC de inventario: no se fabrican registros ni estados (FR-2–FR-7). */
 export type Asset = {
   id: string;
   internal_code: string;

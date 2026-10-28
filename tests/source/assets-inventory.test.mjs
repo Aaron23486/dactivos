@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 
 const read = (file) => readFileSync(file, "utf8");
 
-test("Inventario: el rol llega por propiedades y solo ADMIN ve baja y reactivación", () => {
+test("Inventario: el rol llega por propiedades y solo ADMIN ve baja y reactivación (FR-8)", () => {
   const ui = read("src/components/assets/assets-inventory.tsx");
   const page = read("src/app/(dashboard)/activos/page.tsx");
   assert.match(

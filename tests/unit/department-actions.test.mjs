@@ -36,7 +36,7 @@ function form(fields) {
   for (const [k, v] of Object.entries(fields)) f.set(k, String(v));
   return f;
 }
-test("Contrato real: cambiar estado envia p_is_active, no p_active", async () => {
+test("Contrato real: cambiar estado envia p_is_active, no p_active (FR-4, R9)", async () => {
   for (const active of ["true", "false"]) {
     const h = setup();
     const result = await h.actions.setDepartmentActive(
@@ -52,7 +52,7 @@ test("Contrato real: cambiar estado envia p_is_active, no p_active", async () =>
     assert.ok(h.revalidations.includes("/departamentos"));
   }
 });
-test("No hay RPC sin confirmacion o con valor de estado invalido", async () => {
+test("No hay RPC sin confirmacion o con valor de estado invalido (FR-4, R9)", async () => {
   const h = setup();
   assert.equal(
     (await h.actions.setDepartmentActive(form({ id: assetId, active: "true" }))).ok,
@@ -65,7 +65,7 @@ test("No hay RPC sin confirmacion o con valor de estado invalido", async () => {
   assert.equal(h.calls.length, 0);
   assert.equal(h.revalidations.length, 0);
 });
-test("SECURITY no llega a llamar la RPC administrativa", async () => {
+test("SECURITY no llega a llamar la RPC administrativa (FR-4, R9)", async () => {
   const h = setup("SECURITY");
   await assert.rejects(
     () => h.actions.setDepartmentActive(form({ id: assetId, active: "true", confirm: "yes" })),

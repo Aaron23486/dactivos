@@ -15,6 +15,7 @@ const schema = z.object({
     .refine((s) => !/[\u0000-\u001f\u007f]/.test(s)),
   confirm: z.literal("yes"),
 });
+/** Invitación por correo mediante la Edge Function; el perfil nace inactivo (FR-11, D6). */
 export async function inviteUser(form: FormData): Promise<OperationResult> {
   await requirePermission("users.manage");
   const input = schema.safeParse({

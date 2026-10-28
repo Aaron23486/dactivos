@@ -3,6 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { getSupabasePublicConfig } from "./config";
+import { hardenSessionCookie } from "./cookie-options";
 
 export async function createClient() {
   const cookieStore = await cookies();
@@ -17,7 +18,7 @@ export async function createClient() {
       setAll(cookiesToSet) {
         try {
           cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options);
+            cookieStore.set(name, value, hardenSessionCookie(options));
           });
         } catch {
           // Las cookies se actualizarán mediante el

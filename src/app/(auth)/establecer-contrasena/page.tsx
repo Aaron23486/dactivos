@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
+import { isFreshInvitationSession } from "@/lib/auth/invitation-session";
 import { createClient } from "@/lib/supabase/server";
 import { setInvitedPassword } from "./actions";
 
@@ -14,6 +15,8 @@ async function PasswordContent({ searchParams }: { searchParams: Params }) {
     error,
   } = await supabase.auth.getUser();
   if (error || !user) redirect("/login?error=invitation");
+  const { data: session } = await supabase.auth.getClaims();
+  if (!isFreshInvitationSession(session?.claims)) redirect("/login?error=invitation");
   const params = await searchParams;
   const invalid = params.error === "invalid";
   const failed = params.error === "update";

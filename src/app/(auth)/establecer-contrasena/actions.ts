@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { isFreshInvitationSession } from "@/lib/auth/invitation-session";
 import { newPasswordSchema } from "@/lib/auth/password-policy";
 import { createClient } from "@/lib/supabase/server";
 
@@ -18,6 +19,11 @@ export async function setInvitedPassword(formData: FormData) {
     error: identityError,
   } = await supabase.auth.getUser();
   if (identityError || !user) {
+    redirect("/login?error=invitation");
+  }
+  // Solo la sesión recién abierta por el enlace de invitación puede fijar la contraseña (SEC-02).
+  const { data: session } = await supabase.auth.getClaims();
+  if (!isFreshInvitationSession(session?.claims)) {
     redirect("/login?error=invitation");
   }
 

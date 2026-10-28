@@ -205,7 +205,7 @@ npm run test:integration    # against the local Supabase (requires db:up)
 npm run check               # formatting, types, lint, tests and build in sequence
 ```
 
-- **127 automated tests:** 62 unit, 44 source checks and 21 integration tests against a real database. The integration tests check every table and administrative function per role, the inventory rules, simultaneous deliveries and account changes.
+- **133 automated tests:** 66 unit, 45 source checks and 22 integration tests against a real database. The integration tests check every table and administrative function per role, the inventory rules, simultaneous deliveries and account changes.
 - Which test covers each requirement and rule: [`docs/testing.md`](docs/testing.md).
 - **CI (GitHub Actions)** on every pull request: formatting, lint, types, tests, build, the migrations on an empty database with `demo:setup` and the integration tests, `npm audit` and gitleaks secret scanning over the whole history. Actions are pinned by commit, and Dependabot proposes weekly updates as reviewable pull requests ([ADR 0011](docs/decisions/0011-supply-chain-in-ci.md)). CodeQL also analyzes every pull request, and `main` only accepts pull requests whose checks pass.
 
@@ -213,7 +213,7 @@ npm run check               # formatting, types, lint, tests and build in sequen
 
 - Authorization enforced by the database: tables closed to app users, role checks inside every function, `EXECUTE` granted only where needed.
 - No privileged key in the web app; the service key exists only in the Edge Function environment and in terminal commands.
-- Sessions in `httpOnly` cookies; the role is read on every request, so deactivating an account takes effect immediately.
+- Sessions in `httpOnly` cookies that last one 12-hour shift; the role is checked on every request against a live session, so deactivating an account or signing out takes effect immediately ([ADR 0012](docs/decisions/0012-session-hardening.md)).
 - Passwords of 12 to 72 characters with letters and digits; generic sign-in errors; sign-in limits per client IP and per email.
 - Invitation tokens consumed only on an explicit action; invited accounts start inactive.
 - Input validated on the server and again in the database; errors without SQL details; CSV cells protected against formulas.

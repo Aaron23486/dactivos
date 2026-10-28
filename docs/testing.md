@@ -6,9 +6,9 @@ How DACTIVOS is tested, how to run each level, and which tests cover each rule.
 
 | Level       | Command                    | Count | What it checks                                                                                                     |
 | ----------- | -------------------------- | ----: | ------------------------------------------------------------------------------------------------------------------ |
-| Unit        | `npm test`                 |    62 | RPC result parsers, permissions, server actions with a mocked Supabase client, error mapping, dashboard summary, CSV, sign-in throttling, security headers |
-| Source      | `npm test`                 |    44 | Checks over the source code: request-time rendering boundaries, forbidden patterns (direct table access, privileged keys), form safeguards |
-| Integration | `npm run test:integration` |    21 | Authorization, business rules, concurrency and accounts against the local Supabase, through Auth, PostgREST and the database functions |
+| Unit        | `npm test`                 |    66 | RPC result parsers, permissions, server actions with a mocked Supabase client, error mapping, dashboard summary, CSV, sign-in throttling, security headers |
+| Source      | `npm test`                 |    45 | Checks over the source code: request-time rendering boundaries, forbidden patterns (direct table access, privileged keys), form safeguards |
+| Integration | `npm run test:integration` |    22 | Authorization, business rules, concurrency and accounts against the local Supabase, through Auth, PostgREST and the database functions |
 
 All tests use Node's built-in runner (`node:test`). Unit and source tests need nothing running. Integration tests need the local Supabase (`npm run db:up`); each run creates its own accounts and records with a unique `T…` prefix and never changes the demo data. `npm run db:reset` returns the local database to an empty state.
 
@@ -34,7 +34,7 @@ CI runs every level on each pull request ([ADR 0011](decisions/0011-supply-chain
 | R11 audit written by the database, immutable log     | `integration/business-rules` (lifecycle log update and delete refused), `integration/accounts` (audit entries)    |
 | FR-9 history filtered by role                        | `integration/authorization`, `source/history-rendering`                                                            |
 | FR-10 CSV reports                                    | `unit/csv`, `source/routes-and-exports`, `integration/authorization` (report refused to SECURITY)                  |
-| FR-11, R12, R13 invitations and account changes      | `integration/accounts`, `source/user-access`, `source/invitation-onboarding`, `unit/users-directory`               |
+| FR-11, R12, R13 invitations and account changes      | `integration/accounts` (including a copied token after sign-out), `source/user-access`, `source/invitation-onboarding`, `unit/users-directory`, `unit/session-hardening` |
 | FR-12 terminal commands                              | `integration/accounts` (terminal function), `integration/authorization` (closed to app users)                     |
 | FR-13 dashboard                                      | `unit/dashboard-summary` (unreadable counts never shown as zero, partial lists flagged)                            |
 | FR-14 demo access                                    | CI runs `npm run demo:setup` on an empty database                                                                  |

@@ -230,8 +230,8 @@ enable_confirmations = false
 # Changing a password needs a recent sign-in or reauthentication, so a copied session cannot
 # replace it (the invitation flow sets it right after the link is verified).
 secure_password_change = true
-# Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
-max_frequency = "1s"
+# At most one email per address and minute, so the unused flows cannot be used to flood an inbox.
+max_frequency = "60s"
 # Number of characters used in the email OTP.
 otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
@@ -252,6 +252,16 @@ otp_expiry = 3600
 [auth.email.template.invite]
 subject = "Invitación a DACTIVOS"
 content_path = "./supabase/templates/invite.html"
+
+# The app has no password reset or magic-link sign-in: passwords are reset by an administrator
+# from the terminal. These emails carry no link, so they cannot be used to sign in (ADR 0012).
+[auth.email.template.recovery]
+subject = "DACTIVOS: solicitud de restablecimiento"
+content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.magic_link]
+subject = "DACTIVOS: solicitud de enlace de acceso"
+content_path = "./supabase/templates/magic-link.html"
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]

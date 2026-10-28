@@ -7,7 +7,7 @@ How DACTIVOS is tested, how to run each level, and which tests cover each rule.
 | Level       | Command                    | Count | What it checks                                                                                                     |
 | ----------- | -------------------------- | ----: | ------------------------------------------------------------------------------------------------------------------ |
 | Unit        | `npm test`                 |    68 | RPC result parsers, permissions, server actions with a mocked Supabase client, error mapping, dashboard summary, CSV, sign-in throttling, security headers |
-| Source      | `npm test`                 |    48 | Checks over the source code: request-time rendering boundaries, forbidden patterns (direct table access, privileged keys), form safeguards |
+| Source      | `npm test`                 |    49 | Checks over the source code: request-time rendering boundaries, forbidden patterns (direct table access, privileged keys), form safeguards |
 | Integration | `npm run test:integration` |    24 | Authorization, business rules, concurrency and accounts against the local Supabase, through Auth, PostgREST and the database functions |
 
 All tests use Node's built-in runner (`node:test`). Unit and source tests need nothing running. Integration tests need the local Supabase (`npm run db:up`); each run creates its own accounts and records with a unique `T…` prefix and never changes the demo data. `npm run db:reset` returns the local database to an empty state.

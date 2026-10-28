@@ -196,6 +196,8 @@ npm start            # serve the production build
 
 The local Supabase must be running (`npm run db:up`). Supabase Studio, to browse the local database, and Mailpit, the local email inbox, are listed by `npm run db:status`.
 
+The Supabase CLI publishes these services on every network interface of your machine, with development credentials. Use them on a trusted network with the firewall on, and stop them with `npm run db:down` when you finish.
+
 ## Testing and quality checks
 
 ```bash
@@ -205,7 +207,7 @@ npm run test:integration    # against the local Supabase (requires db:up)
 npm run check               # formatting, types, lint, tests and build in sequence
 ```
 
-- **140 automated tests:** 68 unit, 48 source checks and 24 integration tests against a real database. The integration tests check every table and administrative function per role, the inventory rules, simultaneous deliveries and account changes.
+- **141 automated tests:** 68 unit, 49 source checks and 24 integration tests against a real database. The integration tests check every table and administrative function per role, the inventory rules, simultaneous deliveries and account changes.
 - Which test covers each requirement and rule: [`docs/testing.md`](docs/testing.md).
 - **CI (GitHub Actions)** on every pull request: formatting, lint, types, tests, build, the migrations on an empty database with `demo:setup` and the integration tests, `npm audit` and gitleaks secret scanning over the whole history. Actions are pinned by commit, and Dependabot proposes weekly updates as reviewable pull requests ([ADR 0011](docs/decisions/0011-supply-chain-in-ci.md)). CodeQL also analyzes every pull request, and `main` only accepts pull requests whose checks pass.
 

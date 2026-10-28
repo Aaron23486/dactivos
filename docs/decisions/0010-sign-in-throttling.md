@@ -24,3 +24,4 @@ Supabase Auth limits sign-ins per IP address, but every sign-in reaches it from 
 - The limits reset when the server restarts and are counted separately by each instance.
 - Behind a proxy that does not set `X-Forwarded-For`, all clients share one IP bucket; without a proxy the header can be forged, so the per-email lock is the control that always holds.
 - Someone who knows an email can lock it for 15 minutes on purpose; the lock expires on its own.
+- The limits apply to the app's sign-in form. A client that calls the Supabase Auth API directly faces only Supabase's own per-IP limit. The publishable key it would need is not sent to the browser, but it is not a secret either; on a hosted project, Auth's CAPTCHA protection is the control for that path.

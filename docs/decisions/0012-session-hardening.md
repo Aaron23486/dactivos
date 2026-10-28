@@ -17,7 +17,7 @@ The pre-production security review found that the session was the weakest point 
 - **Sessions:** Auth ends a session after 12 hours (one shift) or 4 hours without use (`[auth.sessions]` in `supabase/config.toml`).
 - **Live session in the role check:** `current_app_role()` grants the role only while the token's Auth session exists and has not reached its end (`auth.sessions`, migration `20261029000000_role_requires_live_session.sql`). Every function checks the role through it, so signing out ends access to the API at once (R13).
 - **Password creation only right after an invitation:** `/establecer-contrasena` and its action require a session whose `amr` claim shows an `otp` verification from the last 15 minutes — the session the invitation link opens (`src/lib/auth/invitation-session.ts`). A session started with a password is sent away. Auth requires a recent sign-in or reauthentication to change a password (`secure_password_change`).
-- **Recovery:** the app offers no password reset by email; an administrator resets passwords with `npm run users -- reset-password` ([ADR 0007](0007-local-database-and-terminal-accounts.md)).
+- **Recovery:** the app offers no password reset by email; an administrator resets passwords with `npm run users -- reset-password` ([ADR 0007](0007-local-database-and-terminal-accounts.md)). Supabase Auth still answers recovery and magic-link requests, so their email templates carry no link or token, and Auth sends at most one email per address and minute.
 
 ## Alternatives considered
 

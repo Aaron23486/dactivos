@@ -58,3 +58,21 @@ test("Invitación: la plantilla de correo envía el token hash, no un enlace que
     /content_path = "\.\/supabase\/templates\/invite\.html"/,
   );
 });
+
+test("Correos de Auth: recuperación y enlace de acceso no traen enlaces ni tokens (FR-11, D12)", () => {
+  const config = read("supabase/config.toml");
+  for (const [section, file] of [
+    ["recovery", "supabase/templates/recovery.html"],
+    ["magic_link", "supabase/templates/magic-link.html"],
+  ]) {
+    const block = config.split(`[auth.email.template.${section}]`)[1];
+    assert.ok(block, `falta la sección [auth.email.template.${section}]`);
+    assert.ok(
+      block.split("\n[")[0].includes(`content_path = "./${file}"`),
+      `la sección ${section} debe usar ${file}`,
+    );
+    const template = read(file);
+    assert.doesNotMatch(template, /href=|\{\{\s*\.(ConfirmationURL|TokenHash|Token|SiteURL)/);
+  }
+  assert.match(config, /max_frequency = "60s"/);
+});

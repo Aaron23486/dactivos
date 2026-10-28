@@ -25,6 +25,7 @@ The review behind this document used OWASP Top 10:2025, OWASP API Security Top 1
 | Browser                  | CSP, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, HSTS outside development, no `X-Powered-By` ([ADR 0009](decisions/0009-content-security-policy.md)) | `tests/unit/security-headers.test.mjs`                         |
 | Secrets                  | `.env*` ignored except `.env.example`; only public values in `.env.local`; gitleaks over the full history in CI                                              | CI `supply-chain` job                                          |
 | Dependencies             | `npm audit` (high and critical) in CI; Dependabot proposes updates for review ([ADR 0011](decisions/0011-supply-chain-in-ci.md))                              | CI `supply-chain` job                                          |
+| Repository               | `main` accepts changes only through pull requests with the `checks`, `supply-chain` and `integration` jobs passing, for administrators too; no force pushes or deletion. GitHub secret scanning with push protection, CodeQL code scanning, Dependabot security updates and private vulnerability reporting are enabled | GitHub repository settings                                     |
 
 ## Known limitations
 

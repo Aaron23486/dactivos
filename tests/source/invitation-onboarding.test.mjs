@@ -65,8 +65,12 @@ test("Correos de Auth: recuperación y enlace de acceso no traen enlaces ni toke
     ["recovery", "supabase/templates/recovery.html"],
     ["magic_link", "supabase/templates/magic-link.html"],
   ]) {
-    assert.match(config, new RegExp(`\[auth\.email\.template\.${section}\]`));
-    assert.match(config, new RegExp(`content_path = "\./${file.replace(".", "\.")}"`));
+    const block = config.split(`[auth.email.template.${section}]`)[1];
+    assert.ok(block, `falta la sección [auth.email.template.${section}]`);
+    assert.ok(
+      block.split("\n[")[0].includes(`content_path = "./${file}"`),
+      `la sección ${section} debe usar ${file}`,
+    );
     const template = read(file);
     assert.doesNotMatch(template, /href=|\{\{\s*\.(ConfirmationURL|TokenHash|Token|SiteURL)/);
   }

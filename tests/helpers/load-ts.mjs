@@ -36,7 +36,9 @@ export function loadLocalTs(relativeFile, mocks = {}) {
   runInNewContext(
     outputText,
     { exports, require: testRequire, module: { exports }, console, Date, Intl, process, FormData },
-    { filename: file, timeout: 2000 },
+    // Only guards against a module that never finishes loading. Loading its dependencies (zod,
+    // for example) took more than 2 s on a busy machine and failed tests that were correct.
+    { filename: file, timeout: 10000 },
   );
   return exports;
 }

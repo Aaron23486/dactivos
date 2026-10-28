@@ -157,6 +157,14 @@ npm run db:status   # URLs of the API, Studio (database browser) and Mailpit (em
 npm run db:down     # stop the containers
 ```
 
+To look at the data directly, open **Supabase Studio** at <http://127.0.0.1:54323> (a web table editor and SQL console), or connect any PostgreSQL client to the local database:
+
+```text
+postgresql://postgres:postgres@127.0.0.1:54322/postgres
+```
+
+These are the Supabase CLI's default development credentials, the same on every local installation: never use them outside development (see the note on the local network under [Running locally](#running-locally)).
+
 The schema is in [`supabase/migrations/`](supabase/migrations). Full details in [`docs/architecture.md`](docs/architecture.md#4-data-model).
 
 ## Authentication and demo access

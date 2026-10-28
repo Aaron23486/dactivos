@@ -7,3 +7,6 @@ supabase/.temp
 docs
 AGENTS.md
 CLAUDE.md
+e2e/.auth
+e2e/test-results
+e2e/playwright-report

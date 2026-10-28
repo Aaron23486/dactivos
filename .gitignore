@@ -44,3 +44,8 @@ yarn-error.log*
 
 # Local tool settings
 .claude/
+
+# End-to-end test output and sessions
+/e2e/.auth/
+/e2e/test-results/
+/e2e/playwright-report/

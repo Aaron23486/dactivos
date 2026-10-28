@@ -78,3 +78,20 @@ export function Status({ value }: { value: string }) {
     </span>
   );
 }
+
+/**
+ * Contenedor de una tabla que puede desplazarse a lo ancho. Recibe el foco del teclado y tiene
+ * nombre propio, para que quien no usa ratón también pueda desplazarla (NFR-5, WCAG 2.1.1).
+ */
+export function ScrollRegion({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div
+      role="region"
+      aria-label={label}
+      tabIndex={0}
+      className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    >
+      {children}
+    </div>
+  );
+}

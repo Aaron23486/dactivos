@@ -40,15 +40,16 @@ jobs:
       - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm test
+      # Unit and source tests with minimum coverage thresholds.
+      - run: npm run test:coverage
       # The build only needs the public settings to exist; it does not contact Supabase.
       - run: npm run build
         env:
           NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ci-placeholder
 
-  # The migrations on an empty database, demo:setup, and the authorization, business-rule and
-  # concurrency tests against the local Supabase.
+  # The migrations on an empty database, demo:setup, the authorization, business-rule and
+  # concurrency tests against the local Supabase, and the browser tests on a production build.
   integration:
     runs-on: ubuntu-latest
     steps:
@@ -58,12 +59,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Services the tests do not use are left out to start faster. The image registry sometimes
+      # Studio and its metadata service are left out to start faster; the invitation browser test
+      # needs Mailpit and the Edge runtime. The image registry sometimes
       # refuses downloads for a while ("toomanyrequests"), so the start is retried before failing.
       - name: Start the local Supabase
         run: |
           for attempt in 1 2 3; do
-            npx supabase start -x studio,postgres-meta,mailpit,edge-runtime && exit 0
+            npx supabase start -x studio,postgres-meta && exit 0
             echo "Attempt $attempt to start Supabase failed; retrying in 30 seconds."
             npx supabase stop --no-backup || true
             sleep 30
@@ -71,3 +73,13 @@ jobs:
           exit 1
       - run: npm run demo:setup
       - run: npm run test:integration
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          retention-days: 7

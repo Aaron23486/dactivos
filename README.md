@@ -55,16 +55,16 @@ The screenshots come from a local installation with fictitious data.
 
 ## Tech stack
 
-| Layer      | Technology                                                              | Why                                                                                     |
-| ---------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Language   | Strict TypeScript, Node.js ≥ 22.18                                      | One language for the app, scripts and tests                                             |
-| Web        | Next.js 16 (App Router, Server Actions, Partial Prerendering), React 19 | Server-rendered screens and forms without a separate API layer                          |
-| UI         | Tailwind CSS 4, Base UI primitives, lucide-react                        | A small set of accessible primitives and a custom dark theme                            |
-| Validation | Zod 4                                                                   | Typed validation of every form on the server                                            |
-| Data       | Supabase: PostgreSQL 17, Auth, PostgREST, an Edge Function              | Business rules as database functions and constraints; managed authentication            |
-| Local      | Supabase CLI with Docker                                                | The same database, Auth and email inbox on any machine and in CI                        |
-| Testing    | `node:test`                                                             | Unit tests, source checks and integration tests against a real database                 |
-| Delivery   | GitHub Actions, Dependabot                                              | Lint, types, tests, build, integration, dependency audit and secret scanning per change |
+| Layer      | Technology                                                              | Why                                                                                              |
+| ---------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Language   | Strict TypeScript, Node.js ≥ 22.18                                      | One language for the app, scripts and tests                                                      |
+| Web        | Next.js 16 (App Router, Server Actions, Partial Prerendering), React 19 | Server-rendered screens and forms without a separate API layer                                   |
+| UI         | Tailwind CSS 4, Base UI primitives, lucide-react                        | A small set of accessible primitives and a custom dark theme                                     |
+| Validation | Zod 4                                                                   | Typed validation of every form on the server                                                     |
+| Data       | Supabase: PostgreSQL 17, Auth, PostgREST, an Edge Function              | Business rules as database functions and constraints; managed authentication                     |
+| Local      | Supabase CLI with Docker                                                | The same database, Auth and email inbox on any machine and in CI                                 |
+| Testing    | `node:test`, Playwright, axe                                            | Unit and source tests, integration tests against a real database, browser tests with WCAG checks |
+| Delivery   | GitHub Actions, Dependabot                                              | Lint, types, tests, build, integration, dependency audit and secret scanning per change          |
 
 ## Architecture
 
@@ -99,6 +99,7 @@ supabase/
   config.toml       local Supabase settings
 scripts/            env:local, demo:setup, users and create-admin
 tests/              unit/, source/ and integration/
+e2e/                Playwright: access and roles, asset cycle, invitation, accessibility
 docs/               requirements, architecture, ADRs, security, testing, screenshots
 .github/            CI workflow and Dependabot
 ```
@@ -212,12 +213,17 @@ The Supabase CLI publishes these services on every network interface of your mac
 npm run format:check && npm run lint && npm run typecheck
 npm test                    # unit and source tests
 npm run test:integration    # against the local Supabase (requires db:up)
+npm run test:e2e            # Playwright on a production build (requires db:up)
+npm run test:coverage       # unit and source tests with minimum coverage thresholds
 npm run check               # formatting, types, lint, tests and build in sequence
 ```
 
-- **141 automated tests:** 68 unit, 49 source checks and 24 integration tests against a real database. The integration tests check every table and administrative function per role, the inventory rules, simultaneous deliveries and account changes.
+- **154 automated tests:** 68 unit, 49 source checks, 24 integration tests against a real database and 13 end-to-end tests in the browser.
+  - The integration tests check every table and administrative function per role, the inventory rules, simultaneous deliveries and account changes.
+  - The end-to-end tests run the asset cycle and the full invitation from the screens, and check WCAG 2.1 A/AA with axe on every main screen, keyboard-only sign-in and tablet width.
+- **Coverage:** unit and source tests must keep 85 % of lines, branches and functions (currently about 88 %, 93 % and 91 %); CI fails below the thresholds.
 - Which test covers each requirement and rule: [`docs/testing.md`](docs/testing.md).
-- **CI (GitHub Actions)** on every pull request: formatting, lint, types, tests, build, the migrations on an empty database with `demo:setup` and the integration tests, `npm audit` and gitleaks secret scanning over the whole history. Actions are pinned by commit, and Dependabot proposes weekly updates as reviewable pull requests ([ADR 0011](docs/decisions/0011-supply-chain-in-ci.md)). CodeQL also analyzes every pull request, and `main` only accepts pull requests whose checks pass.
+- **CI (GitHub Actions)** on every pull request: formatting, lint, types, tests, build, the migrations on an empty database with `demo:setup`, the integration and end-to-end tests, coverage thresholds, `npm audit` and gitleaks secret scanning over the whole history. Actions are pinned by commit, and Dependabot proposes weekly updates as reviewable pull requests ([ADR 0011](docs/decisions/0011-supply-chain-in-ci.md)). CodeQL also analyzes every pull request, and `main` only accepts pull requests whose checks pass.
 
 ## Security
 
@@ -252,13 +258,11 @@ The choices I consider most important, each with its decision record:
 - **Sign-in limits live in each server's memory:** they reset on restart and are counted per instance ([ADR 0010](docs/decisions/0010-sign-in-throttling.md)).
 - **Lists show at most 500 rows** per screen; larger inventories would need server-side pagination.
 - **Invitations are not atomic:** if linking the profile fails after the email is sent, the account exists without access until an administrator reviews it.
-- **No end-to-end browser tests yet;** the screens were checked by hand with the demo accounts.
 - **Two asset categories** (handheld and computer), fixed by the schema.
 
 Possible future improvements:
 
 - Server-side pagination and search for large inventories.
-- A Playwright suite for the main flows and accessibility checks.
 - Reporting an incident on a device that is still assigned, without receiving it first.
 - A shared store for sign-in limits to run several instances.
 

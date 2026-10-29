@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { before, test } from "node:test";
 import { admin, call, createUser, target, type TestUser } from "./support.ts";
 
-// Account administration: in-app RPCs (Usuarios screen) and the terminal-only RPC.
+// Administración de cuentas: RPC de la app (pantalla Usuarios) y la RPC solo de terminal.
 
 let adminUser: TestUser;
 
@@ -22,7 +22,7 @@ async function lastAudit(targetUserId: string) {
   return data!;
 }
 
-test("deactivating an account cuts its access on the next request, and it is audited (FR-11, R13)", async () => {
+test("desactivar una cuenta corta su acceso en la siguiente solicitud y queda auditado (FR-11, R13)", async () => {
   const guard = await createUser("SECURITY");
   assert.equal((await call(guard.client, "dactivos_list_assets")).code, null);
 
@@ -34,7 +34,7 @@ test("deactivating an account cuts its access on the next request, and it is aud
   });
   assert.equal(changed.data, true);
 
-  // The session is still valid in Auth, but the role check in every RPC now fails.
+  // La sesión sigue válida en Auth, pero la comprobación de rol de cada RPC ya falla.
   assert.equal((await call(guard.client, "dactivos_list_assets")).code, "42501");
 
   const audit = await lastAudit(guard.id);
@@ -42,7 +42,7 @@ test("deactivating an account cuts its access on the next request, and it is aud
   assert.equal(audit.reason, "Fin de contrato del guarda de prueba.");
   assert.deepEqual(audit.new_state, { role: "SECURITY", is_active: false });
 
-  // Repeating the same change is a no-op.
+  // Repetir el mismo cambio no hace nada.
   const again = await call(adminUser.client, "dactivos_admin_set_user_access", {
     p_user_id: guard.id,
     p_role: "SECURITY",
@@ -52,7 +52,7 @@ test("deactivating an account cuts its access on the next request, and it is aud
   assert.equal(again.data, false);
 });
 
-test("signing out ends access even for a copied token that has not expired (R13, D12)", async () => {
+test("cerrar sesión corta el acceso incluso a un token copiado que no ha vencido (R13, D12)", async () => {
   const guard = await createUser("SECURITY");
   const { data } = await guard.client.auth.getSession();
   const copiedToken = data.session!.access_token;
@@ -60,7 +60,7 @@ test("signing out ends access even for a copied token that has not expired (R13,
 
   await guard.client.auth.signOut({ scope: "global" });
 
-  // The JWT is still validly signed and unexpired; only the Auth session is gone.
+  // El JWT sigue bien firmado y vigente; solo desapareció la sesión de Auth.
   const replay = await fetch(`${target.url}/rest/v1/rpc/dactivos_list_assets`, {
     method: "POST",
     headers: {
@@ -75,7 +75,7 @@ test("signing out ends access even for a copied token that has not expired (R13,
   assert.equal(body.code, "42501");
 });
 
-test("an administrator cannot change their own account (R12)", async () => {
+test("un administrador no puede cambiar su propia cuenta (R12)", async () => {
   const result = await call(adminUser.client, "dactivos_admin_set_user_access", {
     p_user_id: adminUser.id,
     p_role: "SECURITY",
@@ -85,7 +85,7 @@ test("an administrator cannot change their own account (R12)", async () => {
   assert.equal(result.code, "23514");
 });
 
-test("an invited identity is linked once, inactive, and audited with its inviter (FR-11)", async () => {
+test("una identidad invitada se vincula una sola vez, inactiva y auditada con quien invitó (FR-11)", async () => {
   const invited = await createUser(null);
   const linked = await call(adminUser.client, "dactivos_admin_link_invited_user", {
     p_user_id: invited.id,
@@ -107,7 +107,7 @@ test("an invited identity is linked once, inactive, and audited with its inviter
   assert.equal(twice.code, "23505");
 });
 
-test("the terminal RPC creates and changes access with an audit entry and no app actor (FR-12)", async () => {
+test("la RPC de terminal crea y cambia accesos con auditoría y sin actor de la app (FR-12)", async () => {
   const account = await createUser(null);
   const { data: created } = await admin.rpc("dactivos_terminal_set_access", {
     p_user_id: account.id,

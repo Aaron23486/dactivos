@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 /**
- * Password rule shared by the set-password form and the terminal commands (NFR-1). It matches the Supabase
- * Auth settings in supabase/config.toml (minimum_password_length = 12, letters_digits); 72 is the
- * longest password bcrypt can hash without truncating it.
+ * Regla de contraseñas que comparten el formulario de contraseña y los comandos de terminal (NFR-1).
+ * Coincide con la configuración de Auth en supabase/config.toml (minimum_password_length = 12,
+ * letters_digits); 72 es la contraseña más larga que bcrypt procesa sin truncarla.
  */
 export const PASSWORD_MIN_LENGTH = 12;
 export const PASSWORD_MAX_LENGTH = 72;

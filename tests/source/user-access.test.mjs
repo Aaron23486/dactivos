@@ -2,8 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-// The database side of account administration (last ADMIN, audit, grants) is covered by
-// tests/integration/accounts.test.ts against a real database.
+// La parte de base de datos de la administración de cuentas (último ADMIN, auditoría, permisos)
+// la cubre tests/integration/accounts.test.ts contra una base real.
 const action = readFileSync("src/app/actions/users.ts", "utf8");
 const page = readFileSync("src/app/(dashboard)/usuarios/page.tsx", "utf8");
 const board = readFileSync("src/components/users/admin-users-board.tsx", "utf8");

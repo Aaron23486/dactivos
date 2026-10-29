@@ -58,8 +58,8 @@ test("una persona invitada crea su contraseña y entra solo cuando ADMIN la habi
 
   // La persona abre el enlace: el token solo se consume al pulsar el botón.
   const invited = await freshPage(browser);
-  // The email uses the Auth site URL (port 3000 in supabase/config.toml); the tests run on their
-  // own port, so only the path and the token are kept.
+  // El correo usa la URL del sitio de Auth (puerto 3000 en supabase/config.toml); las pruebas corren
+  // en su propio puerto, así que solo se conservan la ruta y el token.
   const link = new URL(await invitationLink(email));
   await invited.goto(link.pathname + link.search);
   await invited.getByRole("button", { name: "Aceptar invitación" }).click();

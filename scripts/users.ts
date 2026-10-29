@@ -1,17 +1,17 @@
 /**
- * Account management from the terminal, for the first administrator and for recovery (FR-12, D7).
- * Day-to-day, an administrator invites and manages accounts from the Usuarios screen.
+ * Gestión de cuentas desde la terminal, para el primer administrador y para recuperación (FR-12, D7).
+ * En el día a día, un administrador invita y gestiona cuentas desde la pantalla Usuarios.
  *
  *   npm run users -- list
- *   npm run users -- create [--role SECURITY|ADMIN]     (SECURITY by default)
+ *   npm run users -- create [--role SECURITY|ADMIN]     (SECURITY por defecto)
  *   npm run users -- deactivate <email>
  *   npm run users -- activate <email>
  *   npm run users -- reset-password <email>
- *   npm run create-admin                                (same as create --role ADMIN)
+ *   npm run create-admin                                (igual que create --role ADMIN)
  *
- * Works against the local Supabase (npm run db:up). For a hosted project, see resolveSupabaseTarget.
- * When creating an ADMIN, ADMIN_EMAIL and ADMIN_PASSWORD can come from the environment.
- * Passwords are never printed nor accepted as arguments.
+ * Funciona contra el Supabase local (npm run db:up). Para un proyecto alojado, ver resolveSupabaseTarget.
+ * Al crear un ADMIN, ADMIN_EMAIL y ADMIN_PASSWORD pueden venir del entorno.
+ * Las contraseñas nunca se imprimen ni se aceptan como argumento.
  */
 import { parseArgs } from "node:util";
 import { z } from "zod";

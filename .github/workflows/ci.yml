@@ -5,12 +5,12 @@ on:
     branches: [main]
   pull_request:
 
-# Least privilege: the workflow only reads the repository.
+# Mínimo privilegio: el workflow solo lee el repositorio.
 permissions:
   contents: read
 
 jobs:
-  # Known vulnerabilities in dependencies and secrets anywhere in the history.
+  # Vulnerabilidades conocidas en dependencias y secretos en cualquier parte del historial.
   supply-chain:
     runs-on: ubuntu-latest
     steps:
@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
-      # Fails on high or critical vulnerabilities (production or development).
+      # Falla con vulnerabilidades altas o críticas (de producción o de desarrollo).
       - run: npm audit --audit-level=high
       - name: Secret scan (gitleaks, full history)
         run: >-
@@ -40,16 +40,16 @@ jobs:
       - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck
-      # Unit and source tests with minimum coverage thresholds.
+      # Pruebas unitarias y de código con umbrales mínimos de cobertura.
       - run: npm run test:coverage
-      # The build only needs the public settings to exist; it does not contact Supabase.
+      # El build solo necesita que existan los valores públicos; no se conecta a Supabase.
       - run: npm run build
         env:
           NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ci-placeholder
 
-  # The migrations on an empty database, demo:setup, the authorization, business-rule and
-  # concurrency tests against the local Supabase, and the browser tests on a production build.
+  # Las migraciones sobre una base vacía, demo:setup, las pruebas de autorización, reglas de negocio
+  # y concurrencia contra el Supabase local, y las pruebas en navegador sobre un build de producción.
   integration:
     runs-on: ubuntu-latest
     steps:
@@ -59,9 +59,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Studio and its metadata service are left out to start faster; the invitation browser test
-      # needs Mailpit and the Edge runtime. The image registry sometimes
-      # refuses downloads for a while ("toomanyrequests"), so the start is retried before failing.
+      # Studio y su servicio de metadatos se omiten para arrancar más rápido; la prueba de invitación
+      # necesita Mailpit y el runtime de Edge. El registro de imágenes a veces rechaza descargas por
+      # un rato ("toomanyrequests"), así que el arranque se reintenta antes de fallar.
       - name: Start the local Supabase
         run: |
           for attempt in 1 2 3; do

@@ -1,7 +1,7 @@
 /**
- * Writes .env.local with the URL and publishable key of the local Supabase: `npm run env:local`.
- * Only public values go into this file; the secret key stays with the Supabase CLI.
- * It does not overwrite an existing .env.local unless --force is given.
+ * Escribe .env.local con la URL y la clave pública del Supabase local: `npm run env:local`.
+ * En este archivo solo van valores públicos; la clave secreta se queda en la CLI de Supabase.
+ * No sobrescribe un .env.local existente salvo con --force.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { readLocalSupabase } from "./lib/supabase-admin.ts";

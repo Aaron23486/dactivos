@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { before, describe, test } from "node:test";
 import { anonClient, call, createUser, rows, type TestUser } from "./support.ts";
 
-// Authorization lives in the database: every table is closed and each RPC checks the caller's role.
+// La autorización vive en la base: todas las tablas están cerradas y cada RPC comprueba el rol.
 
 const TABLES = [
   "admin_audit_log",
@@ -31,7 +31,7 @@ const READ_RPCS = [
   "dactivos_list_maintenance_cases",
 ];
 
-// Admin-only RPCs, called with well-formed but harmless arguments: the role check comes first.
+// RPC solo de ADMIN, llamadas con argumentos válidos pero inofensivos: el rol se comprueba primero.
 const NIL = "00000000-0000-4000-8000-000000000000";
 const ADMIN_ONLY: [string, Record<string, unknown>][] = [
   ["dactivos_admin_list_users", {}],
@@ -70,8 +70,8 @@ before(async () => {
   ]);
 });
 
-describe("anonymous visitor (R1)", () => {
-  test("cannot read any table", async () => {
+describe("visitante anónimo (R1)", () => {
+  test("no puede leer ninguna tabla", async () => {
     const anon = anonClient();
     for (const table of TABLES) {
       const { error } = await anon.from(table).select("*").limit(1);
@@ -79,7 +79,7 @@ describe("anonymous visitor (R1)", () => {
     }
   });
 
-  test("cannot execute any RPC", async () => {
+  test("no puede ejecutar ninguna RPC", async () => {
     const anon = anonClient();
     for (const name of [...READ_RPCS, "current_app_role", ...ADMIN_ONLY.map(([n]) => n)]) {
       const args = ADMIN_ONLY.find(([n]) => n === name)?.[1] ?? {};
@@ -88,8 +88,8 @@ describe("anonymous visitor (R1)", () => {
   });
 });
 
-describe("signed-in account without an active profile (R1, R13)", () => {
-  test("has no role and every read is refused", async () => {
+describe("cuenta con sesión sin perfil activo (R1, R13)", () => {
+  test("no tiene rol y se le niega toda lectura", async () => {
     for (const user of [noProfile, inactive]) {
       assert.equal((await call(user.client, "current_app_role")).data, null);
       for (const name of READ_RPCS) {
@@ -99,25 +99,25 @@ describe("signed-in account without an active profile (R1, R13)", () => {
   });
 });
 
-describe("SECURITY role (FR-1, R1)", () => {
-  test("reads the operational lists", async () => {
+describe("rol SECURITY (FR-1, R1)", () => {
+  test("lee las listas operativas", async () => {
     for (const name of READ_RPCS) assert.equal((await call(security.client, name)).code, null);
   });
 
-  test("cannot read tables directly", async () => {
+  test("no puede leer tablas directamente", async () => {
     for (const table of TABLES) {
       const { error } = await security.client.from(table).select("*").limit(1);
       assert.ok(error, `${table} must not be readable directly`);
     }
   });
 
-  test("is refused every administrative RPC", async () => {
+  test("se le niega toda RPC administrativa", async () => {
     for (const [name, args] of ADMIN_ONLY) {
       assert.equal((await call(security.client, name, args)).code, "42501", name);
     }
   });
 
-  test("sees no account, configuration or retirement events in the history (FR-9)", async () => {
+  test("no ve eventos de cuentas, configuración, bajas ni reportes en el historial (FR-9)", async () => {
     const events = rows(
       (await call(security.client, "dactivos_list_audit_events", { p_limit: 100, p_offset: 0 }))
         .data,
@@ -129,8 +129,8 @@ describe("SECURITY role (FR-1, R1)", () => {
   });
 });
 
-describe("ADMIN role (FR-1, R1)", () => {
-  test("can call the administrative reads", async () => {
+describe("rol ADMIN (FR-1, R1)", () => {
+  test("puede usar las lecturas administrativas", async () => {
     assert.equal((await call(adminUser.client, "dactivos_admin_list_users")).code, null);
     const report = await call(adminUser.client, "dactivos_admin_report_page", {
       p_kind: "assets",
@@ -140,7 +140,7 @@ describe("ADMIN role (FR-1, R1)", () => {
     assert.equal(report.code, null);
   });
 
-  test("sees account events in the history (FR-9)", async () => {
+  test("ve los eventos de cuentas en el historial (FR-9)", async () => {
     const events = rows(
       (await call(adminUser.client, "dactivos_list_audit_events", { p_limit: 100, p_offset: 0 }))
         .data,
@@ -148,7 +148,7 @@ describe("ADMIN role (FR-1, R1)", () => {
     assert.ok(events.some((e) => e.source === "ADMINISTRACION"));
   });
 
-  test("cannot run the terminal-only account RPC (FR-12)", async () => {
+  test("no puede ejecutar la RPC de cuentas solo de terminal (FR-12)", async () => {
     const result = await call(adminUser.client, "dactivos_terminal_set_access", {
       p_user_id: security.id,
       p_role: "ADMIN",

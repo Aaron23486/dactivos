@@ -1,12 +1,12 @@
 /**
- * Demo access for a local evaluation: `npm run demo:setup` (FR-14, D8).
+ * Acceso de demostración para una evaluación local: `npm run demo:setup` (FR-14, D8).
  *
- * - Creates (or reactivates) one account per role with a generated password that is printed only
- *   once. Running it again issues new passwords.
- * - Creates fictitious departments, employees and assets, plus deliveries, returns, a maintenance
- *   case and a retirement, the first time only. Everything goes through the app's own RPCs while
- *   signed in as the demo administrator, so validations and the audit trail apply as usual.
- * - Refuses to run against anything that is not the local Supabase.
+ * - Crea (o reactiva) una cuenta por rol con una contraseña generada que se muestra una sola vez.
+ *   Al ejecutarlo de nuevo emite contraseñas nuevas.
+ * - Crea departamentos, empleados y activos ficticios, con entregas, devoluciones, un caso de
+ *   mantenimiento y una baja, solo la primera vez. Todo pasa por las RPC de la app con la sesión del
+ *   administrador de demostración, así se aplican las validaciones y la auditoría de siempre.
+ * - Se niega a ejecutarse contra algo que no sea el Supabase local.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {

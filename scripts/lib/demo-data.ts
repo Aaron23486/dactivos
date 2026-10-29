@@ -1,4 +1,4 @@
-// Fictitious data for local demos. Codes start with DEMO- so they are easy to recognize.
+// Datos ficticios para demostraciones locales. Los códigos empiezan con DEMO- para reconocerlos.
 
 export const DEMO_DEPARTMENTS = [
   { code: "OPERACIONES", name: "Operaciones" },
@@ -41,7 +41,7 @@ export const DEMO_ASSETS = [
   })),
 ];
 
-/** Deliveries made by the demo: asset code → employee code. */
+/** Entregas que hace la demostración: código de activo → código de empleado. */
 export const DEMO_ASSIGNMENTS = [
   ["DEMO-HH-001", "DEMO-E001"],
   ["DEMO-HH-002", "DEMO-E002"],
@@ -55,7 +55,7 @@ export const DEMO_ASSIGNMENTS = [
   ["DEMO-PC-004", "DEMO-E009"],
 ] as const;
 
-/** Returns after delivery. A damaged return opens a maintenance case automatically. */
+/** Devoluciones posteriores. Una devolución dañada abre un caso de mantenimiento automáticamente. */
 export const DEMO_RETURNS = [
   { asset: "DEMO-HH-005", condition: "GOOD", notes: null },
   { asset: "DEMO-PC-004", condition: "GOOD", notes: null },
@@ -71,8 +71,8 @@ export const DEMO_RETURNS = [
   },
 ] as const;
 
-/** Of the maintenance cases above, this one is resolved and its asset released. */
+/** De los casos anteriores, este se resuelve y su activo se libera. */
 export const DEMO_RESOLVED_ASSET = "DEMO-PC-003";
 
-/** Asset taken out of circulation by an administrator. */
+/** Activo que un administrador retira de circulación. */
 export const DEMO_RETIRED_ASSET = "DEMO-HH-010";

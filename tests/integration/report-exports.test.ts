@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { before, test } from "node:test";
 import { admin, call, createUser, ok, rows, type TestUser } from "./support.ts";
 
-// Every CSV export leaves an append-only record that administrators see in the history.
+// Cada exportación CSV deja un registro inmutable que los administradores ven en el historial.
 
 let adminUser: TestUser;
 
@@ -10,7 +10,7 @@ before(async () => {
   adminUser = await createUser("ADMIN");
 });
 
-test("an export is recorded with its actor, report, range and rows, and shows in the history (FR-10, D13)", async () => {
+test("una exportación se registra con actor, reporte, rango y filas, y aparece en el historial (FR-10, D13)", async () => {
   const logged = await ok(adminUser.client, "dactivos_admin_log_report_export", {
     p_kind: "employees",
     p_date_from: "2026-01-01",
@@ -40,7 +40,7 @@ test("an export is recorded with its actor, report, range and rows, and shows in
   assert.equal(event!.actor, adminUser.id);
 });
 
-test("the export log rejects invalid data and cannot be changed, even with the service key (R11, D13)", async () => {
+test("el registro de exportaciones rechaza datos inválidos y no se puede cambiar, ni con la clave de servicio (R11, D13)", async () => {
   const badRange = await call(adminUser.client, "dactivos_admin_log_report_export", {
     p_kind: "assets",
     p_date_from: "2026-02-01",

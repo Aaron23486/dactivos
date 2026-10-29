@@ -1,7 +1,7 @@
--- Account management from the server terminal (npm run users / create-admin / demo:setup); FR-12, D7.
--- Changes the access profile and writes the audit entry in the same transaction. There is no
--- app user behind these commands, so actor_user_id is NULL and the event name says where it came from.
--- Only service_role (server-side scripts) can execute it; anon and authenticated cannot.
+-- Gestión de cuentas desde la terminal del servidor (npm run users / create-admin / demo:setup); FR-12, D7.
+-- Cambia el perfil de acceso y escribe la auditoría en la misma transacción. Detrás de estos comandos
+-- no hay un usuario de la app, así que actor_user_id es NULL y el nombre del evento dice de dónde vino.
+-- Solo service_role (scripts del servidor) puede ejecutarla; anon y authenticated no.
 BEGIN;
 
 CREATE FUNCTION public.dactivos_terminal_set_access(
@@ -29,7 +29,7 @@ BEGIN
     RAISE EXCEPTION 'Datos de acceso invalidos' USING ERRCODE = '22023';
   END IF;
 
-  -- Same lock as the in-app access RPCs: account changes are serialized.
+  -- El mismo bloqueo que las RPC de acceso de la app: los cambios de cuentas se serializan.
   PERFORM pg_catalog.pg_advisory_xact_lock(706, 2026);
 
   IF NOT EXISTS (SELECT 1 FROM auth.users WHERE id = p_user_id) THEN
@@ -46,7 +46,7 @@ BEGIN
     RETURN false;
   END IF;
 
-  -- Never leave the system without an active administrator.
+  -- Nunca dejar el sistema sin un administrador activo.
   IF v_exists AND v_old_role = 'ADMIN' AND v_old_active
      AND (p_role <> 'ADMIN' OR NOT p_is_active)
      AND (SELECT count(*) FROM public.profiles WHERE role = 'ADMIN' AND is_active) <= 1

@@ -1,5 +1,5 @@
-# Dependabot proposes updates as pull requests; none is applied on its own.
-# Each pull request runs the full CI and is reviewed before merging.
+# Dependabot propone actualizaciones como pull requests; ninguna se aplica sola.
+# Cada pull request pasa por el CI completo y se revisa antes de unirlo.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -8,15 +8,15 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     groups:
-      # Patch and minor versions together; each major version arrives in its own pull request.
+      # Parches y versiones menores juntos; cada versión mayor llega en su propio pull request.
       minor-and-patch:
         update-types: [minor, patch]
     ignore:
-      # Major versions that are done on purpose, as their own change:
-      # - the Node types follow the Node major used by the app and CI (22);
-      # - Next.js and eslint-config-next share a version and move together;
-      # - React and React DOM move together with Next.js;
-      # - TypeScript and ESLint majors depend on the rest of the toolchain supporting them.
+      # Versiones mayores que se hacen a propósito, como cambio propio:
+      # - los tipos de Node siguen la versión mayor de Node que usan la app y el CI (22);
+      # - Next.js y eslint-config-next comparten versión y se actualizan juntos;
+      # - React y React DOM se actualizan junto con Next.js;
+      # - las mayores de TypeScript y ESLint dependen de que el resto de herramientas las admita.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
       - dependency-name: "next"

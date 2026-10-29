@@ -1,6 +1,6 @@
--- DACTIVOS initial schema.
--- Apply only to an empty database (npm run db:up does it locally); never to a database that already has it.
--- It creates no Auth accounts, profiles or operational data.
+-- Esquema inicial de DACTIVOS.
+-- Solo para una base vacía (npm run db:up lo aplica en local); nunca sobre una base que ya lo tenga.
+-- No crea cuentas de Auth, perfiles ni datos operativos.
 BEGIN;
 SET LOCAL search_path = public, pg_catalog;
 
@@ -171,7 +171,7 @@ CREATE TABLE public."profiles" (
 );
 ALTER TABLE public."profiles" ENABLE ROW LEVEL SECURITY;
 
--- Keys first, then checks, then foreign keys: a foreign key needs the referenced key to exist.
+-- Primero las llaves, luego los CHECK y al final las llaves foráneas: una foránea necesita que exista la llave a la que apunta.
 ALTER TABLE public."admin_audit_log" ADD CONSTRAINT "admin_audit_log_pkey" PRIMARY KEY (id);
 ALTER TABLE public."asset_assignments" ADD CONSTRAINT "asset_assignments_pkey" PRIMARY KEY (id);
 ALTER TABLE public."asset_categories" ADD CONSTRAINT "asset_categories_pkey" PRIMARY KEY (code);

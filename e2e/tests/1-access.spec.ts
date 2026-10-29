@@ -8,7 +8,7 @@ test.describe("sin sesión", () => {
     await page.getByLabel("Correo electrónico").fill(accounts.SECURITY.email);
     await page.getByLabel("Contraseña").fill("ContraseñaIncorrecta1");
     await page.getByRole("button", { name: "Ingresar a Dactivos" }).click();
-    // Next.js adds its own empty route announcer with role=alert; the message is found by text.
+    // Next.js agrega su propio anunciador de rutas vacío con role=alert; el mensaje se busca por texto.
     await expect(
       page.getByRole("alert").filter({
         hasText: "No fue posible iniciar sesión. Verifica tus credenciales e inténtalo nuevamente.",

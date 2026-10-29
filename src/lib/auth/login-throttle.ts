@@ -1,11 +1,11 @@
 /**
- * Sign-in throttling, kept in this server's memory (NFR-1, D10).
+ * Límite de intentos de inicio de sesión, en la memoria de este servidor (NFR-1, D10).
  *
- * Supabase Auth also limits sign-ins per IP, but every request reaches it from this server, so its
- * limit is shared by all users. Here the limits apply per client IP and per email:
- * - more than LOGIN_ATTEMPTS_PER_MINUTE attempts from one IP within a minute are refused;
- * - after LOGIN_MAX_FAILURES consecutive failures an email is locked for LOGIN_LOCKOUT_MINUTES.
- * Both answer with the same message whether or not the account exists.
+ * Supabase Auth también limita por IP, pero todas las solicitudes le llegan desde este servidor, así
+ * que ese límite lo comparten todos los usuarios. Aquí los límites son por IP del cliente y por correo:
+ * - se rechazan más de LOGIN_ATTEMPTS_PER_MINUTE intentos de una IP en un minuto;
+ * - tras LOGIN_MAX_FAILURES fallos seguidos, un correo queda bloqueado LOGIN_LOCKOUT_MINUTES.
+ * Ambos responden con el mismo mensaje, exista o no la cuenta.
  */
 export const LOGIN_ATTEMPTS_PER_MINUTE = 10;
 export const LOGIN_MAX_FAILURES = 5;
@@ -26,7 +26,7 @@ export class LoginThrottle {
     this.now = now;
   }
 
-  /** Records an attempt and says whether it may proceed. */
+  /** Registra un intento e indica si puede continuar. */
   allow(ip: string, email: string): boolean {
     const now = this.now();
     const lock = this.failures.get(email);
@@ -55,7 +55,7 @@ export class LoginThrottle {
     this.failures.delete(email);
   }
 
-  /** Bounded memory: forget the oldest entry instead of growing without limit. */
+  /** Memoria acotada: olvida la entrada más antigua en vez de crecer sin límite. */
   private remember<T>(map: Map<string, T>, key: string, value: T): void {
     map.delete(key);
     if (map.size >= MAX_TRACKED) map.delete(map.keys().next().value!);

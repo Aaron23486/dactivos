@@ -8,6 +8,7 @@ Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semve
 - **Added** coverage thresholds (85 % of lines, branches and functions) for unit and source tests in CI.
 - **Fixed** accessibility issues found by those tests: wide tables can now be scrolled with the keyboard, and the brand link's accessible name matches its visible text.
 - **Fixed** the login page reading the session before marking the request as dynamic, which logged a prerendering error in production.
+- **Changed** code comments, configuration comments and integration test names to Spanish, like the interface and the rest of the code; documentation, commits and pull requests stay in English. Comments in the existing migrations changed, not their SQL.
 
 ## [1.1.0] — 2026-10-28
 

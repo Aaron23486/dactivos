@@ -4,6 +4,7 @@ Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semve
 
 ## [Unreleased]
 
+- **Security** Content Security Policy with a new nonce on every request: inline scripts and injected event handlers no longer run. Partial Prerendering is turned off so every page can carry the nonce ([ADR 0014](docs/decisions/0014-nonce-content-security-policy.md), superseding ADR 0009).
 - **Added** 13 end-to-end tests with Playwright on a production build: access and roles, the asset cycle from the screens, the full invitation through the email, and WCAG 2.1 A/AA checks with axe on every main screen, a dialog, keyboard-only sign-in and tablet width.
 - **Added** coverage thresholds (85 % of lines, branches and functions) for unit and source tests in CI.
 - **Fixed** accessibility issues found by those tests: wide tables can now be scrolled with the keyboard, and the brand link's accessible name matches its visible text.

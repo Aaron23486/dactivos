@@ -55,16 +55,16 @@ The screenshots come from a local installation with fictitious data.
 
 ## Tech stack
 
-| Layer      | Technology                                                              | Why                                                                                              |
-| ---------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Language   | Strict TypeScript, Node.js ≥ 22.18                                      | One language for the app, scripts and tests                                                      |
-| Web        | Next.js 16 (App Router, Server Actions, Partial Prerendering), React 19 | Server-rendered screens and forms without a separate API layer                                   |
-| UI         | Tailwind CSS 4, Base UI primitives, lucide-react                        | A small set of accessible primitives and a custom dark theme                                     |
-| Validation | Zod 4                                                                   | Typed validation of every form on the server                                                     |
-| Data       | Supabase: PostgreSQL 17, Auth, PostgREST, an Edge Function              | Business rules as database functions and constraints; managed authentication                     |
-| Local      | Supabase CLI with Docker                                                | The same database, Auth and email inbox on any machine and in CI                                 |
-| Testing    | `node:test`, Playwright, axe                                            | Unit and source tests, integration tests against a real database, browser tests with WCAG checks |
-| Delivery   | GitHub Actions, Dependabot                                              | Lint, types, tests, build, integration, dependency audit and secret scanning per change          |
+| Layer      | Technology                                                 | Why                                                                                              |
+| ---------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Language   | Strict TypeScript, Node.js ≥ 22.18                         | One language for the app, scripts and tests                                                      |
+| Web        | Next.js 16 (App Router, Server Actions), React 19          | Server-rendered screens and forms without a separate API layer                                   |
+| UI         | Tailwind CSS 4, Base UI primitives, lucide-react           | A small set of accessible primitives and a custom dark theme                                     |
+| Validation | Zod 4                                                      | Typed validation of every form on the server                                                     |
+| Data       | Supabase: PostgreSQL 17, Auth, PostgREST, an Edge Function | Business rules as database functions and constraints; managed authentication                     |
+| Local      | Supabase CLI with Docker                                   | The same database, Auth and email inbox on any machine and in CI                                 |
+| Testing    | `node:test`, Playwright, axe                               | Unit and source tests, integration tests against a real database, browser tests with WCAG checks |
+| Delivery   | GitHub Actions, Dependabot                                 | Lint, types, tests, build, integration, dependency audit and secret scanning per change          |
 
 ## Architecture
 
@@ -218,7 +218,7 @@ npm run test:coverage       # unit and source tests with minimum coverage thresh
 npm run check               # formatting, types, lint, tests and build in sequence
 ```
 
-- **154 automated tests:** 68 unit, 49 source checks, 24 integration tests against a real database and 13 end-to-end tests in the browser.
+- **161 automated tests:** 71 unit, 50 source checks, 24 integration tests against a real database and 16 end-to-end tests in the browser.
   - The integration tests check every table and administrative function per role, the inventory rules, simultaneous deliveries and account changes.
   - The end-to-end tests run the asset cycle and the full invitation from the screens, and check WCAG 2.1 A/AA with axe on every main screen, keyboard-only sign-in and tablet width.
 - **Coverage:** unit and source tests must keep 85 % of lines, branches and functions (currently about 88 %, 93 % and 91 %); CI fails below the thresholds.
@@ -234,7 +234,7 @@ npm run check               # formatting, types, lint, tests and build in sequen
 - Invitation tokens consumed only on an explicit action; invited accounts start inactive.
 - Input validated on the server and again in the database; errors without SQL details; CSV cells protected against formulas.
 - Security events (failed and throttled sign-ins, denied access, rejected invitation links) logged without passwords, tokens or emails in clear; every CSV export audited ([ADR 0013](docs/decisions/0013-security-events-and-export-audit.md)).
-- Security headers with a Content Security Policy, `frame-ancestors 'none'` and HSTS in production.
+- A Content Security Policy with a new nonce on every request, so an injected script does not run; `frame-ancestors 'none'` and HSTS in production.
 - No known high or critical vulnerabilities in dependencies; one low-severity advisory affects a development tool and has no fix yet (see [`docs/security.md`](docs/security.md#known-limitations)). CI audits dependencies and scans the history for secrets.
 
 Details, known limitations and a deployment checklist: [`docs/security.md`](docs/security.md). To report a vulnerability, see [`SECURITY.md`](SECURITY.md).
@@ -250,11 +250,11 @@ The choices I consider most important, each with its decision record:
 - **Invitations through an Edge Function,** the only place with the service key; invited accounts start inactive ([ADR 0006](docs/decisions/0006-invitations-through-an-edge-function.md)).
 - **A local Supabase** for development, evaluation and CI, with audited terminal commands for accounts ([ADR 0007](docs/decisions/0007-local-database-and-terminal-accounts.md)).
 - **Reproducible demo access** with generated passwords instead of fixed credentials ([ADR 0008](docs/decisions/0008-demo-access.md)).
-- **A CSP without nonces,** a deliberate trade-off to keep Partial Prerendering ([ADR 0009](docs/decisions/0009-content-security-policy.md)).
+- **A Content Security Policy with a per-request nonce,** choosing protection against injected scripts over prerendered page shells ([ADR 0014](docs/decisions/0014-nonce-content-security-policy.md)).
 
 ## Known limitations
 
-- **The CSP allows inline scripts**, because Partial Prerendering cannot carry a per-request nonce ([ADR 0009](docs/decisions/0009-content-security-policy.md)).
+- **Every page renders per request** so it can carry the CSP nonce; Next.js' next major version plans to make prerendered shells mandatory, which will require revisiting [ADR 0014](docs/decisions/0014-nonce-content-security-policy.md).
 - **Sign-in limits live in each server's memory:** they reset on restart and are counted per instance ([ADR 0010](docs/decisions/0010-sign-in-throttling.md)).
 - **Lists show at most 500 rows** per screen; larger inventories would need server-side pagination.
 - **Invitations are not atomic:** if linking the profile fails after the email is sent, the account exists without access until an administrator reviews it.

@@ -21,7 +21,7 @@ The pre-production security review found that the session was the weakest point 
 
 ## Alternatives considered
 
-- **Nonce-based CSP to make cookie theft harder:** incompatible with Partial Prerendering (ADR 0009); making the cookie unreadable removes the reason to steal it from scripts.
+- **Nonce-based CSP to make cookie theft harder:** incompatible with Partial Prerendering at the time (ADR 0009; later adopted in ADR 0014); making the cookie unreadable removes the reason to steal it from scripts.
 - **Shorter access tokens instead of the live-session check:** narrows the window but does not close it, and increases token refreshes.
 - **Asking for the current password on `/establecer-contrasena`:** an invited person has none; limiting the page to the invitation session fits its purpose.
 

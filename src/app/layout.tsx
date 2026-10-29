@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { Geist, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
@@ -18,7 +19,10 @@ export const metadata: Metadata = {
   description: "Sistema de gestión y control de activos tecnológicos",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Todas las páginas se generan en cada solicitud: así Next.js puede poner el nonce de la CSP en
+  // sus scripts. Una página prerenderizada no lo tendría y el navegador bloquearía sus scripts (D14).
+  await connection();
   return (
     <html
       lang="es"

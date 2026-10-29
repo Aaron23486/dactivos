@@ -12,8 +12,9 @@ Each significant decision has a short record with its context, the decision, the
 | [0006](0006-invitations-through-an-edge-function.md)   | Invitations through an Edge Function; invited profiles start inactive                       | Accepted |
 | [0007](0007-local-database-and-terminal-accounts.md)   | Local Supabase for development and CI; accounts from the terminal                           | Accepted |
 | [0008](0008-demo-access.md)                            | Demo access with generated passwords and fictitious data                                     | Accepted |
-| [0009](0009-content-security-policy.md)                | Content Security Policy without nonces                                                       | Accepted |
+| [0009](0009-content-security-policy.md)                | Content Security Policy without nonces                                                       | Superseded by 0014 |
 | [0010](0010-sign-in-throttling.md)                     | Sign-in throttling per client IP and per email                                               | Accepted |
 | [0011](0011-supply-chain-in-ci.md)                     | Dependency audit, secret scanning and reviewed Dependabot updates                            | Accepted |
 | [0012](0012-session-hardening.md)                     | Session hardening: `httpOnly` cookie, live-session role check, password creation only after an invitation | Accepted |
 | [0013](0013-security-events-and-export-audit.md)       | Security events in the server log; every CSV export audited before the file is delivered     | Accepted |
+| [0014](0014-nonce-content-security-policy.md)          | Content Security Policy with a per-request nonce; no Partial Prerendering                    | Accepted |

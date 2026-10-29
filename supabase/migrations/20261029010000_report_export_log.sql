@@ -1,6 +1,6 @@
--- Audit of CSV exports (FR-10, R11, D13): who exported which report, with which date range and
--- how many rows. Exports contain the employee directory, so each one leaves a record. The log is
--- append-only and appears in the administrators' history with the source REPORTE.
+-- Auditoría de exportaciones CSV (FR-10, R11, D13): quién exportó qué reporte, con qué rango de
+-- fechas y cuántas filas. Las exportaciones contienen el directorio de empleados, así que cada una
+-- deja registro. El registro es inmutable y aparece en el historial de ADMIN con el origen REPORTE.
 BEGIN;
 
 CREATE TABLE public.report_export_log (
@@ -33,7 +33,7 @@ CREATE TRIGGER report_export_log_immutable
   BEFORE UPDATE OR DELETE ON public.report_export_log
   FOR EACH ROW EXECUTE FUNCTION public.dactivos_guard_report_export_log();
 
--- Called by the export route before it returns the file; without this record there is no file.
+-- La llama la ruta de exportación antes de entregar el archivo; sin este registro no hay archivo.
 CREATE FUNCTION public.dactivos_admin_log_report_export(
   p_kind text,
   p_date_from date,
@@ -67,7 +67,7 @@ REVOKE ALL ON FUNCTION public.dactivos_admin_log_report_export(text, date, date,
 GRANT EXECUTE ON FUNCTION public.dactivos_admin_log_report_export(text, date, date, integer)
   TO authenticated;
 
--- The history adds the exports for administrators (source REPORTE); everything else is unchanged.
+-- El historial agrega las exportaciones para ADMIN (origen REPORTE); lo demás no cambia.
 CREATE OR REPLACE FUNCTION public.dactivos_list_audit_events(p_limit integer DEFAULT 100, p_offset integer DEFAULT 0)
  RETURNS jsonb
  LANGUAGE plpgsql

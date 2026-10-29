@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { before, test } from "node:test";
 import { call, createFixture, createUser, ok, rows, type TestUser } from "./support.ts";
 
-// Several operators acting at the same moment: row locks and partial unique indexes must let
-// exactly one request win, with no partial state left behind.
+// Varios operadores al mismo tiempo: los bloqueos de fila y los índices únicos parciales deben
+// dejar ganar exactamente una solicitud, sin estados a medias.
 
 let adminUser: TestUser;
 let operators: TestUser[];
@@ -13,7 +13,7 @@ before(async () => {
   operators = await Promise.all(Array.from({ length: 4 }, () => createUser("SECURITY")));
 });
 
-test("simultaneous deliveries of the same asset: exactly one succeeds (R2, NFR-2)", async () => {
+test("entregas simultáneas del mismo activo: exactamente una tiene éxito (R2, NFR-2)", async () => {
   const f = await createFixture(adminUser.client, "RACE", { employees: 4, handhelds: 1 });
   const hh = f.asset("HH1");
 
@@ -37,7 +37,7 @@ test("simultaneous deliveries of the same asset: exactly one succeeds (R2, NFR-2
   assert.equal(open.length, 1);
 });
 
-test("simultaneous creation of the same internal code: exactly one asset is created (R8, NFR-2)", async () => {
+test("altas simultáneas con el mismo código interno: se crea exactamente un activo (R8, NFR-2)", async () => {
   const f = await createFixture(adminUser.client, "DUPCODE", { employees: 0, handhelds: 0 });
   const code = `${f.prefix}-SAME`;
   const results = await Promise.all(

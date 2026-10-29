@@ -6,7 +6,7 @@ import { loginThrottle } from "@/lib/auth/login-throttle";
 import { emailFingerprint, logSecurityEvent } from "@/lib/security/events";
 import { createClient } from "@/lib/supabase/server";
 
-/** Client IP as reported by the proxy in front of the app; "direct" when there is none. */
+/** IP del cliente según el proxy delante de la app; «direct» cuando no hay proxy. */
 async function clientIp(): Promise<string> {
   const forwarded = (await headers()).get("x-forwarded-for");
   return forwarded?.split(",")[0]?.trim() || "direct";

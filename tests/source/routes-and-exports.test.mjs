@@ -36,8 +36,8 @@ test("No force-dynamic ni service role Next.js (NFR-1)", () => {
     assert.doesNotMatch(s, /force-dynamic|service_role|SUPABASE_SERVICE_ROLE_KEY|auth\.admin/);
   }
 });
-// The role filters of the history and report RPCs and the audited retirement are covered by
-// tests/integration against a real database.
+// Los filtros por rol de las RPC de historial y reportes y la baja auditada los cubre
+// tests/integration contra una base real.
 test("Exportación paginada, rol ADMIN, límites y protección CSV (FR-10)", () => {
   const r = read("src/app/api/reportes/route.ts");
   assert.match(r, /requirePermission\("reports\.export"\)/);

@@ -10,7 +10,7 @@ export const storageFile = (role: "ADMIN" | "SECURITY") =>
 export type Account = { email: string; password: string };
 export type E2EData = {
   run: string;
-  /** SIGN_OUT is a separate SECURITY account: signing out ends every session of an account. */
+  /** SIGN_OUT es otra cuenta SECURITY: cerrar sesión termina todas las sesiones de una cuenta. */
   accounts: Record<"ADMIN" | "SECURITY" | "SIGN_OUT", Account>;
   employees: { code: string; name: string }[];
   assets: { code: string; name: string }[];

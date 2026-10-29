@@ -2,9 +2,9 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
 
-// The browser only talks to this app: Supabase is called from the server. Inline scripts are
-// allowed because Partial Prerendering serves a static shell that cannot carry a per-request
-// nonce (see docs/security.md).
+// El navegador solo habla con esta app: a Supabase se le llama desde el servidor. Se permiten
+// scripts en línea porque el Partial Prerendering sirve una estructura estática que no puede
+// llevar un nonce por solicitud (ver docs/security.md).
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
@@ -23,7 +23,7 @@ const securityHeaders = [
   { key: "Content-Security-Policy", value: contentSecurityPolicy },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
-  // Invitation links carry a token in the query string: never send the full URL to other sites.
+  // Los enlaces de invitación llevan un token en la URL: nunca enviar la URL completa a otros sitios.
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
   ...(isDev
@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
   headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
-  // The home page is the dashboard; redirecting here avoids rendering a page only to redirect.
+  // La página de inicio es el dashboard; redirigir aquí evita renderizar una página solo para redirigir.
   redirects() {
     return [{ source: "/", destination: "/dashboard", permanent: false }];
   },

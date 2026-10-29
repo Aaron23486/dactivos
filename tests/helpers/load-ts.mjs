@@ -36,8 +36,8 @@ export function loadLocalTs(relativeFile, mocks = {}) {
   runInNewContext(
     outputText,
     { exports, require: testRequire, module: { exports }, console, Date, Intl, process, FormData },
-    // Only guards against a module that never finishes loading. Loading its dependencies (zod,
-    // for example) took more than 2 s on a busy machine and failed tests that were correct.
+    // Solo protege contra un módulo que nunca termina de cargar. Cargar sus dependencias (zod, por
+    // ejemplo) tardó más de 2 s en un equipo ocupado y hacía fallar pruebas correctas.
     { filename: file, timeout: 10000 },
   );
   return exports;

@@ -1,9 +1,9 @@
 /**
- * Shared setup for integration tests. They run against the local Supabase (npm run db:up) through
- * the same HTTP APIs the app uses: Auth, PostgREST and the database RPCs.
+ * Preparación compartida de las pruebas de integración. Corren contra el Supabase local
+ * (npm run db:up) por las mismas API HTTP que usa la app: Auth, PostgREST y las RPC de la base.
  *
- * Every run creates its own accounts and records with a unique T… prefix, so it never depends
- * on or changes the demo data. `npm run db:reset` returns the local database to an empty state.
+ * Cada ejecución crea sus propias cuentas y registros con un prefijo T… único, así nunca depende
+ * de los datos de demostración ni los cambia. `npm run db:reset` deja la base local vacía.
  */
 import { randomInt, randomUUID } from "node:crypto";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
@@ -20,7 +20,7 @@ if (!target.local) throw new Error("Integration tests only run against the local
 
 export const admin = adminClient(target);
 
-/** Unique per run: department codes only accept A-Z, 0-9 and underscores. */
+/** Único por ejecución: los códigos de departamento solo aceptan A-Z, 0-9 y guiones bajos. */
 export const RUN = `T${Date.now().toString(36).toUpperCase()}${randomInt(10_000)}`;
 
 export function anonClient(): SupabaseClient {
@@ -31,7 +31,7 @@ export function anonClient(): SupabaseClient {
 
 export type TestUser = { id: string; email: string; client: SupabaseClient };
 
-/** Creates an Auth account; with a role, also its profile (active unless stated). */
+/** Crea una cuenta de Auth; con un rol, también su perfil (activo salvo que se indique). */
 export async function createUser(
   role: "ADMIN" | "SECURITY" | null,
   { active = true }: { active?: boolean } = {},
@@ -59,7 +59,7 @@ export async function call(
   return { data, code: error ? (error.code ?? "unknown") : null };
 }
 
-/** Calls an RPC that must succeed and returns its data. */
+/** Llama una RPC que debe funcionar y devuelve sus datos. */
 export async function ok(
   client: SupabaseClient,
   name: string,
@@ -73,7 +73,7 @@ export async function ok(
 type Row = Record<string, unknown>;
 const rows = (data: unknown): Row[] => (Array.isArray(data) ? (data as Row[]) : []);
 
-/** Creates a department, employees and assets for one test, all with unique codes. */
+/** Crea un departamento, empleados y activos para una prueba, todos con códigos únicos. */
 export async function createFixture(
   client: SupabaseClient,
   name: string,

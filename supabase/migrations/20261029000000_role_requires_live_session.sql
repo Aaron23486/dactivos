@@ -1,7 +1,7 @@
--- The role is granted only while the token's Auth session exists (R13, D12).
--- Access tokens are verified by signature and expiry alone, so after a sign-out or a revoked
--- session a copied token kept working against the RPCs until it expired. Every function checks
--- the role through current_app_role(), so requiring a live session here closes that window.
+-- El rol se concede solo mientras exista la sesión de Auth del token (R13, D12).
+-- Los tokens de acceso se verifican solo por firma y vencimiento, así que tras cerrar o revocar la
+-- sesión un token copiado seguía funcionando con las RPC hasta vencer. Todas las funciones comprueban
+-- el rol con current_app_role(), así que exigir aquí una sesión viva cierra esa ventana.
 BEGIN;
 
 CREATE OR REPLACE FUNCTION public.current_app_role()
@@ -24,7 +24,7 @@ AS $function$
   LIMIT 1;
 $function$;
 
--- CREATE OR REPLACE keeps the existing grants; restated so the file reads on its own.
+-- CREATE OR REPLACE conserva los permisos; se repiten para que el archivo se entienda solo.
 REVOKE ALL ON FUNCTION public.current_app_role() FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.current_app_role() TO authenticated;
 

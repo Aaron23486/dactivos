@@ -1,4 +1,4 @@
--- Execute ONLY on a new database after applying the migrations (npm run db:up does it locally).
+-- Ejecutar SOLO en una base nueva después de aplicar las migraciones (npm run db:up lo hace en local).
 WITH checks AS (
  SELECT 'tables' AS kind, (SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE' AND table_name = ANY(ARRAY['admin_audit_log','asset_assignments','asset_categories','asset_lifecycle_log','asset_maintenance_cases','asset_release_consumptions','asset_release_validations','asset_return_inspections','assets','assignment_audit_log','departments','employees','maintenance_audit_log','operational_audit_log','profiles','report_export_log'])) AS total, 16 AS expected
  UNION ALL SELECT 'categories', count(*), 2 FROM public.asset_categories

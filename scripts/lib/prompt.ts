@@ -2,8 +2,8 @@ import { createInterface, type Interface } from "node:readline/promises";
 import { Writable } from "node:stream";
 import type { z } from "zod";
 
-// A single interface for every question: one per question would let the first one consume all
-// input when it arrives through a pipe (for example `printf ... | npm run users -- create`).
+// Una sola interfaz para todas las preguntas: si se crea una por pregunta, la primera consume toda
+// la entrada cuando llega por tubería (por ejemplo `printf ... | npm run users -- create`).
 let rl: Interface | undefined;
 let pipedLines: AsyncIterator<string> | undefined;
 let muted = false;
@@ -22,7 +22,7 @@ function prompt(): Interface {
   return rl;
 }
 
-/** Closes terminal input; call it when the script ends. */
+/** Cierra la entrada de la terminal; llamar al terminar el script. */
 export function closePrompt(): void {
   rl?.close();
   rl = undefined;
@@ -38,7 +38,7 @@ async function nextPipedLine(question: string): Promise<string> {
   return value;
 }
 
-/** Asks in the terminal. With `hidden`, what is typed is not shown (passwords). */
+/** Pregunta en la terminal. Con `hidden` no muestra lo que se escribe (contraseñas). */
 export async function ask(question: string, hidden = false): Promise<string> {
   if (process.stdin.isTTY !== true) return nextPipedLine(question);
   const answer = prompt().question(question);
@@ -51,7 +51,7 @@ export async function ask(question: string, hidden = false): Promise<string> {
   }
 }
 
-/** Takes the value from an environment variable, or asks until it is valid. */
+/** Toma el valor de una variable de entorno o lo pregunta hasta que sea válido. */
 export async function askValid<T extends z.ZodType>(
   schema: T,
   question: string,
@@ -69,7 +69,7 @@ export async function askValid<T extends z.ZodType>(
   }
 }
 
-/** Asks for a new password twice (or takes it from the environment without confirmation). */
+/** Pide una contraseña nueva dos veces (o la toma del entorno sin confirmar). */
 export async function askNewPassword(
   schema: z.ZodType<string>,
   envValue?: string,

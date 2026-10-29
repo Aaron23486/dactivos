@@ -11,7 +11,7 @@ import {
   type TestUser,
 } from "./support.ts";
 
-// Inventory rules enforced by the database, exercised through the same RPCs the screens use.
+// Reglas del inventario que aplica la base, probadas con las mismas RPC que usan las pantallas.
 
 let adminUser: TestUser;
 let security: TestUser;
@@ -28,7 +28,7 @@ async function openAssignmentId(client: TestUser["client"], assetId: string): Pr
   return String(open.id);
 }
 
-test("an asset can only be delivered once until it is returned (FR-5, R2)", async () => {
+test("un activo solo se entrega una vez hasta que se devuelve (FR-5, R2)", async () => {
   const f = await createFixture(adminUser.client, "ONCE");
   const hh = f.asset("HH1");
   await ok(security.client, "dactivos_assign_asset", {
@@ -51,7 +51,7 @@ test("an asset can only be delivered once until it is returned (FR-5, R2)", asyn
   assert.equal(await assetStatus(security.client, hh), "AVAILABLE");
 });
 
-test("an employee holds at most one open asset per category (R3)", async () => {
+test("un empleado tiene como máximo un activo abierto por categoría (R3)", async () => {
   const f = await createFixture(adminUser.client, "CATEGORY", { employees: 1, computers: 1 });
   await ok(security.client, "dactivos_assign_asset", {
     p_asset_id: f.asset("HH1"),
@@ -63,14 +63,14 @@ test("an employee holds at most one open asset per category (R3)", async () => {
   });
   assert.ok(["23505", "23514"].includes(String(secondHandheld.code)), String(secondHandheld.code));
 
-  // A different category is allowed.
+  // Otra categoría sí se permite.
   await ok(security.client, "dactivos_assign_asset", {
     p_asset_id: f.asset("PC1"),
     p_employee_id: f.employeeIds[0],
   });
 });
 
-test("a damaged return goes to maintenance and needs resolution and a physical check (FR-6, FR-7, R5–R7)", async () => {
+test("una devolución dañada va a mantenimiento y requiere resolución y revisión física (FR-6, FR-7, R5–R7)", async () => {
   const f = await createFixture(adminUser.client, "DAMAGED", { employees: 1, handhelds: 1 });
   const hh = f.asset("HH1");
   await ok(security.client, "dactivos_assign_asset", {
@@ -109,7 +109,7 @@ test("a damaged return goes to maintenance and needs resolution and a physical c
   assert.equal(await assetStatus(security.client, hh), "AVAILABLE");
 });
 
-test("only an available asset can be retired, and the retirement is audited and immutable (FR-8, R5, R11)", async () => {
+test("solo un activo disponible se da de baja, y la baja queda auditada e inmutable (FR-8, R5, R11)", async () => {
   const f = await createFixture(adminUser.client, "RETIRE", { employees: 1, handhelds: 2 });
   await ok(adminUser.client, "dactivos_assign_asset", {
     p_asset_id: f.asset("HH2"),
@@ -137,7 +137,7 @@ test("only an available asset can be retired, and the retirement is audited and 
   });
   assert.equal(delivery.code, "23514", "a retired asset cannot be delivered");
 
-  // Even with the service key (which bypasses RLS) the lifecycle log cannot be rewritten.
+  // Ni con la clave de servicio (que salta RLS) se puede reescribir el registro de bajas.
   const { data: log } = await admin
     .from("asset_lifecycle_log")
     .select("id")
@@ -160,7 +160,7 @@ test("only an available asset can be retired, and the retirement is audited and 
   assert.equal(await assetStatus(adminUser.client, hh), "AVAILABLE");
 });
 
-test("invalid input is rejected by the database, not only by the forms (R8, R10)", async () => {
+test("la base rechaza datos inválidos, no solo los formularios (R8, R10)", async () => {
   const f = await createFixture(adminUser.client, "INPUT", { employees: 1, handhelds: 1 });
   const duplicate = await call(security.client, "dactivos_create_asset", {
     p_internal_code: `${f.prefix}-hh1`,

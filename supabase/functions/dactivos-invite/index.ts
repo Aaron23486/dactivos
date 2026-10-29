@@ -1,5 +1,5 @@
-// Invitation of a new account by an ADMIN. Deployed in the same Supabase project as the database;
-// requires the caller's JWT, and the service role key exists only in the Edge Functions environment.
+// Invitación de una cuenta nueva por un ADMIN. Se despliega en el mismo proyecto Supabase que la base;
+// exige el JWT de quien llama, y la clave de servicio solo existe en el entorno de Edge Functions.
 import { createClient } from "npm:@supabase/supabase-js@2.118.0";
 const json = (body: Record<string, unknown>, status = 200) =>
   new Response(JSON.stringify(body), {

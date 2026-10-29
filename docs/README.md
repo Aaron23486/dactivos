@@ -15,4 +15,4 @@ The project history is in [CHANGELOG.md](../CHANGELOG.md).
 
 **Identifiers.** Functional requirements (FR-1…), non-functional requirements (NFR-1…), business rules (R1…R13) and design decisions (D1…D13) have stable identifiers so that code, tests and ADRs can point to them.
 
-**Language.** The documentation is in English; the user interface is in Spanish, so screen names and messages are quoted as they appear in the app.
+**Language.** The documentation, commits and pull requests are in English. The user interface is in Spanish, and so are code comments and test names, so screen names and messages are quoted as they appear in the app.

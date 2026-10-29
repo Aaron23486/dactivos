@@ -48,6 +48,9 @@ npm run dev                   # http://localhost:3000
 npm run format:check | lint | typecheck | test | build
 npm run check                 # formato, tipos, lint, pruebas y build
 npm run test:integration      # contra el Supabase local; requiere db:up
+npm run test:e2e              # Playwright sobre un build de producción (:3100); requiere db:up
+                              # (E2E_BROWSER_CHANNEL=msedge usa el Edge instalado)
+npm run test:coverage         # unitarias y de código con umbral mínimo de cobertura (85 %)
 npm run db:reset              # recrea la base local desde las migraciones (borra los datos locales)
 npm run db:status             # URLs de la API, Studio y Mailpit (correos de invitación)
 ```

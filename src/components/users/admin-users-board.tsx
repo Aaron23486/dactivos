@@ -8,6 +8,7 @@ import { ActionForm } from "@/components/operations/action-form";
 import { setUserAccess } from "@/app/actions/users";
 import { inviteUser } from "@/app/actions/invitations";
 
+import { ScrollRegion } from "@/components/operations/primitives";
 const selectStyle = "min-h-10 w-full rounded-md border bg-background px-3 text-sm";
 
 export function AdminUsersBoard({
@@ -149,7 +150,7 @@ export function AdminUsersBoard({
                   : ""}
               </p>
             </div>
-            <div className="overflow-x-auto">
+            <ScrollRegion label="Tabla de cuentas">
               <table className="w-full min-w-[1020px] text-left text-sm">
                 <thead className="bg-muted/40">
                   <tr>
@@ -263,7 +264,7 @@ export function AdminUsersBoard({
                   No hay cuentas que coincidan con el filtro.
                 </p>
               )}
-            </div>
+            </ScrollRegion>
           </section>
           <p className="text-sm text-muted-foreground">
             Gestión auditada e invitaciones del mismo Supabase. Los empleados receptores de equipos

@@ -20,7 +20,9 @@
     "demo:setup": "node scripts/demo-setup.ts",
     "create-admin": "node scripts/users.ts create --role ADMIN",
     "users": "node scripts/users.ts",
-    "test:integration": "node --test --test-concurrency=1 \"tests/integration/*.test.ts\""
+    "test:integration": "node --test --test-concurrency=1 \"tests/integration/*.test.ts\"",
+    "test:e2e": "playwright test --config e2e/playwright.config.ts",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=\"src/**\" --test-coverage-lines=85 --test-coverage-branches=85 --test-coverage-functions=85 \"tests/unit/*.test.mjs\" \"tests/source/*.test.mjs\""
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -37,6 +39,8 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

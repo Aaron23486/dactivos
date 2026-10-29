@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { Boxes, LockKeyhole, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { signIn } from "./actions";
@@ -11,6 +12,8 @@ type LoginProps = {
 };
 
 async function LoginContent({ searchParams }: LoginProps) {
+  // La sesión depende de la solicitud: nada de esto se prerenderiza.
+  await connection();
   const supabase = await createClient();
 
   const {

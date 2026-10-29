@@ -6,7 +6,13 @@ import type { Employee, Department, Assignment } from "@/lib/operations/contract
 import { dateTime } from "@/lib/operations/contracts";
 import { createEmployee, updateEmployee } from "@/app/actions/operations";
 import { ActionForm } from "@/components/operations/action-form";
-import { PageHeader, Metric, ErrorNotice, inputClass } from "@/components/operations/primitives";
+import {
+  PageHeader,
+  Metric,
+  ErrorNotice,
+  inputClass,
+  ScrollRegion,
+} from "@/components/operations/primitives";
 
 export function EmployeesBoard({
   role,
@@ -131,7 +137,7 @@ export function EmployeesBoard({
           </div>
           <p className="text-xs text-muted-foreground">{rows.length} empleados visibles</p>
         </div>
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Tabla de empleados">
           <table className="w-full min-w-[650px] text-left text-sm">
             <thead className="bg-muted/40">
               <tr>
@@ -202,7 +208,7 @@ export function EmployeesBoard({
               No hay empleados que coincidan con los filtros.
             </p>
           )}
-        </div>
+        </ScrollRegion>
       </section>
       {selected && (
         <div

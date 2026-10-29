@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { dateTime } from "@/lib/operations/contracts";
+import { ScrollRegion } from "@/components/operations/primitives";
 import type { AuditEvent } from "@/lib/history/contracts";
 export function HistoryBoard({
   events,
@@ -66,7 +67,7 @@ export function HistoryBoard({
               ))}
             </select>
           </div>
-          <div className="overflow-x-auto">
+          <ScrollRegion label="Tabla del historial">
             <table className="min-w-[850px] w-full text-left text-sm">
               <thead className="bg-muted/40">
                 <tr>
@@ -102,7 +103,7 @@ export function HistoryBoard({
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollRegion>
           {!visible.length && (
             <p className="p-8 text-sm text-muted-foreground">No hay registros para este filtro.</p>
           )}

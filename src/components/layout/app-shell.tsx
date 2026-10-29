@@ -128,7 +128,8 @@ export function AppShell({ children, role }: { children: React.ReactNode; role: 
             <Link
               href="/dashboard"
               title="Ir al Dashboard"
-              aria-label="DACTIVOS - Ir al Dashboard"
+              // Con el menú expandido, el nombre accesible es el texto visible (WCAG 2.5.3).
+              aria-label={collapsed ? "DACTIVOS - Ir al Dashboard" : undefined}
               className="flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-cyan-400"
             >
               <span className="industrial-icon-frame size-10 shrink-0">

@@ -61,6 +61,7 @@ tests/
   unit/                parsers, permissions, server actions with mocks, CSV, throttling, headers
   source/              checks over the source: rendering boundaries, forbidden patterns
   integration/         authorization, business rules, concurrency and accounts on a real database
+e2e/                   Playwright browser tests: access, asset cycle, invitation, accessibility
 ```
 
 ## 4. Data model
@@ -116,7 +117,7 @@ The schema is in two migrations: `20261013000000_initial_schema.sql` (the applic
 | Validation  | Zod 4                                                           |
 | Data        | Supabase: PostgreSQL 17, Auth, PostgREST, Edge Functions (Deno) |
 | Local setup | Supabase CLI with Docker                                        |
-| Tests       | `node:test` (unit, source and integration)                      |
+| Tests       | `node:test` (unit, source and integration), Playwright with axe (end-to-end) |
 | Quality     | ESLint, Prettier, TypeScript, GitHub Actions, Dependabot        |
 
 ## 7. Design decisions

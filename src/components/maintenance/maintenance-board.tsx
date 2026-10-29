@@ -11,6 +11,7 @@ import {
   ErrorNotice,
   Status,
   inputClass,
+  ScrollRegion,
 } from "@/components/operations/primitives";
 
 export function MaintenanceBoard({
@@ -139,7 +140,7 @@ export function MaintenanceBoard({
           </div>
           <p className="text-xs text-muted-foreground">Últimos 500 casos, ordenados por fecha</p>
         </div>
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Tabla de incidencias">
           <table className="w-full min-w-[750px] text-left text-sm">
             <thead className="bg-muted/40">
               <tr>
@@ -210,7 +211,7 @@ export function MaintenanceBoard({
               No se encontraron casos con estos filtros.
             </p>
           )}
-        </div>
+        </ScrollRegion>
       </section>
     </main>
   );

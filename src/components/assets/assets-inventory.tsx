@@ -13,6 +13,7 @@ import {
   ErrorNotice,
   Status,
   inputClass,
+  ScrollRegion,
 } from "@/components/operations/primitives";
 
 export function AssetsInventory({
@@ -151,7 +152,7 @@ export function AssetsInventory({
             {rows.length} de {assets.length} equipos
           </p>
         </div>
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Tabla de activos">
           <table className="w-full min-w-[750px] text-left text-sm">
             <thead className="bg-muted/40">
               <tr>
@@ -253,7 +254,7 @@ export function AssetsInventory({
               No encontramos activos para esta búsqueda.
             </p>
           )}
-        </div>
+        </ScrollRegion>
       </section>
       {selected && (
         <div

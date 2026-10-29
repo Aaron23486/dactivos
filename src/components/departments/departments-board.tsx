@@ -5,7 +5,13 @@ import type { AppRole } from "@/lib/auth/permissions";
 import type { Department, Employee } from "@/lib/operations/contracts";
 import { createDepartment, updateDepartment, setDepartmentActive } from "@/app/actions/operations";
 import { ActionForm } from "@/components/operations/action-form";
-import { PageHeader, Metric, ErrorNotice, inputClass } from "@/components/operations/primitives";
+import {
+  PageHeader,
+  Metric,
+  ErrorNotice,
+  inputClass,
+  ScrollRegion,
+} from "@/components/operations/primitives";
 
 export function DepartmentsBoard({
   role,
@@ -108,7 +114,7 @@ export function DepartmentsBoard({
                   : "No se pudo consultar el conteo de empleados."}
               </p>
             </div>
-            <div className="overflow-x-auto">
+            <ScrollRegion label="Tabla de departamentos">
               <table className="w-full min-w-[720px] text-left text-sm">
                 <thead className="bg-muted/40">
                   <tr>
@@ -195,7 +201,7 @@ export function DepartmentsBoard({
                   No hay departamentos para los filtros seleccionados.
                 </p>
               )}
-            </div>
+            </ScrollRegion>
           </section>
         </>
       )}

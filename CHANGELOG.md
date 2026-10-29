@@ -2,6 +2,13 @@
 
 Notable changes to DACTIVOS. Versions follow [Semantic Versioning](https://semver.org/); before 1.0.0 the work is grouped by stage.
 
+## [Unreleased]
+
+- **Added** 13 end-to-end tests with Playwright on a production build: access and roles, the asset cycle from the screens, the full invitation through the email, and WCAG 2.1 A/AA checks with axe on every main screen, a dialog, keyboard-only sign-in and tablet width.
+- **Added** coverage thresholds (85 % of lines, branches and functions) for unit and source tests in CI.
+- **Fixed** accessibility issues found by those tests: wide tables can now be scrolled with the keyboard, and the brand link's accessible name matches its visible text.
+- **Fixed** the login page reading the session before marking the request as dynamic, which logged a prerendering error in production.
+
 ## [1.1.0] — 2026-10-28
 
 Security fixes from a pre-production review (no critical or high findings; 2 medium, 6 low, 5 informational), an audit of CSV exports, and the public repository protections.

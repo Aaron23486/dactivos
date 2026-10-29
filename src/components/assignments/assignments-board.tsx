@@ -5,7 +5,13 @@ import { assignAsset, returnAsset } from "@/app/actions/operations";
 import type { Asset, Employee, Assignment } from "@/lib/operations/contracts";
 import { dateTime } from "@/lib/operations/contracts";
 import { ActionForm } from "@/components/operations/action-form";
-import { PageHeader, Metric, ErrorNotice, inputClass } from "@/components/operations/primitives";
+import {
+  PageHeader,
+  Metric,
+  ErrorNotice,
+  inputClass,
+  ScrollRegion,
+} from "@/components/operations/primitives";
 
 export function AssignmentsBoard({
   assets,
@@ -123,7 +129,7 @@ export function AssignmentsBoard({
             Hasta 500 movimientos recientes, ordenados por fecha
           </p>
         </div>
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Tabla de entregas y devoluciones">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="bg-muted/40">
               <tr>
@@ -196,7 +202,7 @@ export function AssignmentsBoard({
               Sin movimientos para estos filtros.
             </p>
           )}
-        </div>
+        </ScrollRegion>
       </section>
     </main>
   );

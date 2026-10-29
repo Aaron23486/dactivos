@@ -22,10 +22,18 @@ test("Runtime: limite Suspense sigue protegiendo DashboardContent (FR-1, R13)", 
     /<Suspense[\s\S]*?<DashboardContent>\{children\}<\/DashboardContent>[\s\S]*?<\/Suspense>/,
   );
 });
-test("Runtime: Cache Components y Partial Prefetch se preservan (FR-1, R13)", () => {
-  assert.match(config, /cacheComponents:\s*true/);
-  assert.match(config, /partialPrefetching:\s*true/);
+test("Runtime: todas las páginas son dinámicas para llevar el nonce de la CSP (NFR-1, D14)", () => {
+  assert.doesNotMatch(config, /cacheComponents|partialPrefetching/);
   assert.doesNotMatch(layout, /force-dynamic|force-static|use cache/);
+  const root = readFileSync("src/app/layout.tsx", "utf8");
+  assert.match(root, /export default async function RootLayout/);
+  assert.match(root, /await connection\(\);/);
+});
+test("Runtime: el proxy envía la CSP con un nonce nuevo en cada solicitud (NFR-1, D14)", () => {
+  const proxy = readFileSync("src/proxy.ts", "utf8");
+  assert.match(proxy, /const nonce = createNonce\(\);/);
+  assert.match(proxy, /"content-security-policy": policy/);
+  assert.match(proxy, /response\.headers\.set\("Content-Security-Policy", policy\)/);
 });
 test("Runtime: autorizacion sigue pasando por la verificacion SSR (FR-1, R13)", () => {
   assert.match(layout, /requirePermission\("dashboard\.read"\)/);

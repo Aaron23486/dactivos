@@ -127,6 +127,9 @@ test("Auditoría: todas las rutas dejan URL/conexión en componentes suspendidos
   assert.ok(files.length >= 15, "Cobertura mínima de páginas y layouts");
   const failures = [];
   for (const route of files) {
+    // El layout raíz llama connection() a propósito: hace dinámicas todas las páginas para que lleven
+    // el nonce de la CSP (D14). Las demás rutas siguen dejando lo dinámico dentro de Suspense.
+    if (route === resolve(appRoot, "layout.tsx")) continue;
     const code = readFileSync(route, "utf8");
     const ast = ts.createSourceFile(route, code, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
     for (const statement of ast.statements) {

@@ -3,10 +3,25 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getSupabasePublicConfig } from "./config";
 import { hardenSessionCookie } from "./cookie-options";
 
-export async function updateSession(request: NextRequest) {
+/**
+ * Renueva la sesión de Supabase en cada solicitud. `requestHeaders` se agregan a la solicitud que
+ * reciben las páginas (por ejemplo la CSP con su nonce, D14).
+ */
+export async function updateSession(
+  request: NextRequest,
+  requestHeaders: Record<string, string> = {},
+) {
   const { url, publishableKey } = getSupabasePublicConfig();
 
-  let response = NextResponse.next({ request });
+  // Las cookies renovadas se escriben en request.cookies, que actualiza su cabecera; por eso las
+  // cabeceras se copian cada vez que se crea la respuesta.
+  const forward = () => {
+    const headers = new Headers(request.headers);
+    for (const [name, value] of Object.entries(requestHeaders)) headers.set(name, value);
+    return NextResponse.next({ request: { headers } });
+  };
+
+  let response = forward();
 
   const supabase = createServerClient(url, publishableKey, {
     cookies: {
@@ -18,7 +33,7 @@ export async function updateSession(request: NextRequest) {
           request.cookies.set(name, value);
         });
 
-        response = NextResponse.next({ request });
+        response = forward();
 
         cookiesToSet.forEach(({ name, value, options }) => {
           response.cookies.set(name, value, hardenSessionCookie(options));

@@ -32,7 +32,7 @@ Every private page and action follows the same path:
 3. Server actions validate the form with Zod, then call one RPC with the user's session. The RPC checks the role again and enforces the rules.
 4. Errors are mapped to Spanish messages by SQLSTATE; SQL text never reaches the browser.
 
-Pages render with Partial Prerendering (`cacheComponents`): a static shell plus a dynamic part behind `Suspense` that calls `connection()` before reading the session, so no user data is ever prerendered.
+Every page is rendered per request: the root layout calls `connection()`, so Next.js can add the nonce of the Content Security Policy to its scripts ([ADR 0014](decisions/0014-nonce-content-security-policy.md)). Private pages also call `connection()` inside a `Suspense` boundary before reading the session, so no user data is ever prerendered.
 
 ## 3. Project structure
 
@@ -112,7 +112,7 @@ The schema is in two migrations: `20261013000000_initial_schema.sql` (the applic
 | Layer       | Technology                                                      |
 | ----------- | --------------------------------------------------------------- |
 | Language    | TypeScript (strict), Node.js ≥ 22.18                            |
-| Web         | Next.js 16 (App Router, Server Actions, Partial Prerendering), React 19 |
+| Web         | Next.js 16 (App Router, Server Actions), React 19               |
 | UI          | Tailwind CSS 4, Base UI primitives, lucide-react icons          |
 | Validation  | Zod 4                                                           |
 | Data        | Supabase: PostgreSQL 17, Auth, PostgREST, Edge Functions (Deno) |
@@ -132,8 +132,9 @@ The schema is in two migrations: `20261013000000_initial_schema.sql` (the applic
 | D6  | Invitations through an Edge Function; invited profiles start inactive                       | [0006](decisions/0006-invitations-through-an-edge-function.md)      |
 | D7  | Local Supabase for development and CI; accounts from the terminal through a service-only RPC | [0007](decisions/0007-local-database-and-terminal-accounts.md)      |
 | D8  | Demo access with generated passwords and fictitious data created through the app's RPCs     | [0008](decisions/0008-demo-access.md)                               |
-| D9  | Content Security Policy without nonces because of Partial Prerendering                       | [0009](decisions/0009-content-security-policy.md)                   |
+| D9  | ~~Content Security Policy without nonces~~ — superseded by D14                               | [0009](decisions/0009-content-security-policy.md)                   |
 | D10 | Sign-in throttling per client IP and per email in the app                                    | [0010](decisions/0010-sign-in-throttling.md)                        |
 | D11 | Dependency audit, secret scanning and reviewed Dependabot updates in CI                      | [0011](decisions/0011-supply-chain-in-ci.md)                        |
 | D12 | Hardened session cookie, live-session role check and password creation only after an invitation | [0012](decisions/0012-session-hardening.md)                     |
 | D13 | Security events in the server log; every CSV export audited before the file is delivered     | [0013](decisions/0013-security-events-and-export-audit.md)      |
+| D14 | Content Security Policy with a per-request nonce set by the proxy; no Partial Prerendering    | [0014](decisions/0014-nonce-content-security-policy.md)         |

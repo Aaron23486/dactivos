@@ -23,7 +23,7 @@ test("Interfaz: refresca vistas solo tras exito confirmado (NFR-5)", () => {
   const refresh = content.indexOf("router.refresh()");
   assert.ok(guard >= 0 && refresh > guard);
 });
-test("Rutas: no se usa force-dynamic con Cache Components (NFR-5)", () => {
+test("Rutas: lo dinámico se declara con connection(), nunca con force-dynamic (NFR-5)", () => {
   for (const relative of [
     "src/app/(dashboard)/activos/page.tsx",
     "src/app/(dashboard)/asignaciones/page.tsx",

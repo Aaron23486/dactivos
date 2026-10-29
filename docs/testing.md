@@ -6,10 +6,10 @@ How DACTIVOS is tested, how to run each level, and which tests cover each rule.
 
 | Level       | Command                    | Count | What it checks                                                                                                     |
 | ----------- | -------------------------- | ----: | ------------------------------------------------------------------------------------------------------------------ |
-| Unit        | `npm test`                 |    68 | RPC result parsers, permissions, server actions with a mocked Supabase client, error mapping, dashboard summary, CSV, sign-in throttling, security headers |
-| Source      | `npm test`                 |    49 | Checks over the source code: request-time rendering boundaries, forbidden patterns (direct table access, privileged keys), form safeguards |
+| Unit        | `npm test`                 |    71 | RPC result parsers, permissions, server actions with a mocked Supabase client, error mapping, dashboard summary, CSV, sign-in throttling, security headers |
+| Source      | `npm test`                 |    50 | Checks over the source code: request-time rendering boundaries, forbidden patterns (direct table access, privileged keys), form safeguards |
 | Integration | `npm run test:integration` |    24 | Authorization, business rules, concurrency and accounts against the local Supabase, through Auth, PostgREST and the database functions |
-| End-to-end  | `npm run test:e2e`         |    13 | Playwright on a production build: access and roles, the asset cycle from the screens, the full invitation through Mailpit, and WCAG 2.1 A/AA checks with axe on every main screen, a dialog, keyboard-only sign-in and tablet width |
+| End-to-end  | `npm run test:e2e`         |    16 | Playwright on a production build: access and roles, the asset cycle from the screens, the full invitation through Mailpit, the Content Security Policy (fresh nonce, no violations, injected handler blocked), and WCAG 2.1 A/AA checks with axe on every main screen, a dialog, keyboard-only sign-in and tablet width |
 
 Unit, source and integration tests use Node's built-in runner (`node:test`); end-to-end tests use Playwright. Unit and source tests need nothing running. Integration tests need the local Supabase (`npm run db:up`); each run creates its own accounts and records with a unique `T…` prefix and never changes the demo data. `npm run db:reset` returns the local database to an empty state. End-to-end tests build the app, start it on port 3100 against the same local Supabase and create their own accounts and records with an `E2E…` prefix; `E2E_BROWSER_CHANNEL=msedge` (or `chrome`) uses an installed browser instead of downloading Playwright's Chromium.
 
@@ -43,6 +43,7 @@ CI runs every level on each pull request ([ADR 0011](decisions/0011-supply-chain
 | FR-13 dashboard                                      | `unit/dashboard-summary` (unreadable counts never shown as zero, partial lists flagged)                            |
 | FR-14 demo access                                    | CI runs `npm run demo:setup` on an empty database                                                                  |
 | NFR-1 sign-in throttling and headers                 | `unit/login-throttle`, `unit/security-headers`                                                                     |
+| NFR-1 Content Security Policy (D14)                  | `unit/security-headers` (policy and nonces), `source/request-rendering` (dynamic pages, proxy), `e2e/5-content-security-policy` |
 | Error messages without SQL details                   | `unit/operation-errors`, `source/user-access`                                                                      |
 | NFR-5 accessibility and layout                       | `e2e/4-accessibility` (axe WCAG 2.1 A/AA on 10 screens and a dialog, keyboard-only sign-in, no horizontal overflow at tablet width), `source/form-behavior` |
 

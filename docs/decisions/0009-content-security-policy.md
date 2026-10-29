@@ -1,6 +1,6 @@
 # ADR 0009: Content Security Policy without nonces
 
-**Status:** Accepted · 2026-10-27
+**Status:** Superseded by [ADR 0014](0014-nonce-content-security-policy.md) · 2026-10-27
 
 ## Context
 
